@@ -2,13 +2,14 @@ import React from 'react';
 import { useQuery } from '@apollo/client';
 import { SAY_HI } from './graphql/gql';
 
-function App() {
-  const { data } = useQuery(SAY_HI);
+// components
+import Map from './components/Map';
 
-  console.log(data);
+function App() {
+  
   return (
     <div className="App">
-      Hi, my names jeff
+      <Map />
     </div>
   );
 }
