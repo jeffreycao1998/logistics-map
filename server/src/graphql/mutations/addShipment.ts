@@ -26,6 +26,8 @@ const addShipment = async (_obj: {}, args: ShipmentType, _context: {}) => {
       '/driving' +
       `/${shipment.pickupLocation[0]},${shipment.pickupLocation[1]};${shipment.dropoffLocation[0]},${shipment.dropoffLocation[1]}` +
       '?source=first' +
+      '&destination=last' +
+      '&roundtrip=false' +
       '&geometries=geojson' +
       `&access_token=${process.env.MAPBOX_ACCESS_KEY}`
     ;

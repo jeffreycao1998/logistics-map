@@ -23,18 +23,15 @@ const Map = ({ shipments, routes }: Props) => {
     latitude: 0,
     zoom: 0
   } as ViewportType);
-  const [coordinates, setCoordinates] = useState([] as Array<[number, number]>);
 
   useEffect(() => {
-    setViewport({
-      longitude: (Number(shipments[0].pickupLocation[1]) + Number(shipments[0].dropoffLocation[0]])) / 2,
-      latitude: (Number(shipments[0].pickupLocation[1]) + Number(shipments[0].dropoffLocation[0])) / 2,
-      zoom: 4
-    })
-  },[]);
-
-  useEffect(() => {
-
+    if (shipments.length > 0) {
+      setViewport({
+        longitude: (shipments[0].pickupLocation[0] + shipments[0].dropoffLocation[0]) / 2,
+        latitude: (shipments[0].pickupLocation[1] + shipments[0].dropoffLocation[1]) / 2,
+        zoom: 8
+      })
+    }
   },[shipments]);
 
   return (
@@ -49,42 +46,53 @@ const Map = ({ shipments, routes }: Props) => {
         onViewportChange={(nextViewport: ViewportType) => setViewport(nextViewport)}
         mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN}
       >
-        {/* {
-          waypoints.length > 0 && waypoints.map((waypoint: any) => {
+        {
+          routes.length > 0 && routes.map((route: RouteType, index: number) => {
             return (
-              <Marker longitude={ waypoint.location[0] } latitude={ waypoint.location[1] }>
-                <StyledMarker position={ waypoint.waypointIndex + 1 }/>
-              </Marker>
+              <>
+                <Marker longitude={ route.geojsonCoordinates[0][0] } latitude={ route.geojsonCoordinates[0][1] }>
+                  <StyledMarker position={ index }/>
+                </Marker>
+                <Marker longitude={ route.geojsonCoordinates[route.geojsonCoordinates.length - 1][0] } latitude={ route.geojsonCoordinates[route.geojsonCoordinates.length - 1][1] }>
+                  <StyledMarker position={ index }/>
+                </Marker>
+              </>
             )
           })
-        } */}
+        }
         
-        <Source 
-          id="my-data" 
-          type="geojson" 
-          data={{
-            type: 'Feature',
-            properties: {},
-            geometry: {
-              type: 'LineString',
-              coordinates
-            }
-          }}
-        >
-          <Layer
-            id='route'
-            type='line'
-            source='route'
-            layout={{
-              'line-join': 'round',
-              'line-cap': 'round'
-            }}
-            paint={{
-              'line-color': '#029ffa',
-              'line-width': 8
-            }}
-          />
-        </Source>
+        {
+          routes.length > 0 && routes.map((route: RouteType) => {
+            return (
+              <Source 
+                id={`${route.geojsonCoordinates[0][0]}${route.geojsonCoordinates[0][1]}`} 
+                type="geojson" 
+                data={{
+                  type: 'Feature',
+                  properties: {},
+                  geometry: {
+                    type: 'LineString',
+                    coordinates: route.geojsonCoordinates
+                  }
+                }}
+              >
+                <Layer
+                  id={`${route.geojsonCoordinates[0][0]}${route.geojsonCoordinates[0][1]}`}
+                  type='line'
+                  source={`${route.geojsonCoordinates[0][0]}${route.geojsonCoordinates[0][1]}`}
+                  layout={{
+                    'line-join': 'round',
+                    'line-cap': 'round'
+                  }}
+                  paint={{
+                    'line-color': '#029ffa',
+                    'line-width': 8
+                  }}
+                />
+              </Source>
+            )
+          })
+        }
 
       </ReactMapGL>
     </Container>

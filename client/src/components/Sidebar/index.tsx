@@ -36,7 +36,7 @@ type Props = {
   setRoutes: React.Dispatch<React.SetStateAction<Array<RouteType>>>
 }
 
-const Sidebar = ({ shipments, setShipments }: Props) => {
+const Sidebar = ({ shipments, setShipments, setRoutes }: Props) => {
   return (
     <Router>
       <Container>
@@ -50,7 +50,7 @@ const Sidebar = ({ shipments, setShipments }: Props) => {
             <RouteDetails shipments={shipments}/>
           </Route>
           <Route path='/'>
-            <AddRoute setShipments={setShipments} />
+            <AddRoute setShipments={setShipments} setRoutes={setRoutes}/>
           </Route>
         </Switch>
       </Container>

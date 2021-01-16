@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { ShipmentType } from '../../types';
+import { RouteType, ShipmentType } from '../../types';
 import useInput from '../../hooks/useInput';
 import { useMutation } from '@apollo/client';
 import { ADD_SHIPMENT } from '../../graphql/gql';
@@ -51,9 +51,10 @@ const CreateBtn = styled.div`
 
 type Props= {
   setShipments: React.Dispatch<React.SetStateAction<Array<ShipmentType>>>
+  setRoutes: React.Dispatch<React.SetStateAction<Array<RouteType>>>
 }
 
-const AddShipment = ({ setShipments }: Props) => {
+const AddShipment = ({ setShipments, setRoutes }: Props) => {
   const [pickupLng, pickupLngInput] = useInput({name: 'Longitude', type: 'text'});
   const [pickupLat, pickupLatInput] = useInput({name: 'Latitude', type: 'text'});
 
@@ -73,12 +74,8 @@ const AddShipment = ({ setShipments }: Props) => {
       }
     })
     .then(res => {
-      setShipments((prev: any) => {
-        return [
-          ...prev,
-          res.data.addShipment.shipment
-        ]
-      });
+      setShipments([...res.data.addShipment.shipments]);
+      setRoutes([...res.data.addShipment.routes]);
     })
     .catch(err => {
       console.log(err);
