@@ -1,21 +1,18 @@
 import React from 'react';
 import styled from 'styled-components';
-import {
-  Link,
-} from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 const Container = styled.div`
-  width: 400px;
-  height: 100vh;
-  background-color: blue
+  width: 100%;
+  height: 100%;
 `;
 
-const Sidebar = () => {
+const RouteDetails = () => {
   return (
     <Container>
-
+      Show Info
     </Container>
   );
 };
 
-export default Sidebar;
+export default RouteDetails;

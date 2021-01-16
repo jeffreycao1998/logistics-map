@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import { useQuery } from '@apollo/client';
-import { SAY_HI } from './graphql/gql';
+import { Waypoints } from './types';
+// import { useQuery } from '@apollo/client';
+// import { SAY_HI } from './graphql/gql';
 
 // components
 import Map from './components/Map';
@@ -14,10 +15,18 @@ const Container = styled.div`
 `;
 
 function App() {
+  const [waypoints, setWaypoints] = useState([] as Waypoints);
+
   return (
     <Container className="App">
-      <Map />
-      <Sidebar />
+      <Map
+        waypoints={waypoints}
+        setWaypoints={setWaypoints}
+      />
+      <Sidebar
+        waypoints={waypoints}
+        setWaypoints={setWaypoints}
+      />
     </Container>
   );
 }

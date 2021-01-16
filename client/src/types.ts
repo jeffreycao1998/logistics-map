@@ -3,3 +3,7 @@ export type Viewport = {
   latitude: number
   zoom: number
 }
+
+export type Waypoints = {
+
+}

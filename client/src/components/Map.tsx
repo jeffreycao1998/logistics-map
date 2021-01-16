@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { MAPBOX_ACCESS_TOKEN } from '../util/constants';
-import { Viewport } from '../types';
+import { Viewport, Waypoints } from '../types';
 import axios from 'axios';
 
 // Components
@@ -13,13 +13,17 @@ const Container = styled.div`
   height: 100vh;
 `;
 
-const Map = () => {
+type Props = {
+  waypoints: Waypoints
+  setWaypoints: React.Dispatch<React.SetStateAction<Waypoints>>
+}
+
+const Map = ({ waypoints, setWaypoints }: Props) => {
   const [viewport, setViewport] = useState({
     longitude: 0,
     latitude: 0,
     zoom: 0
   } as Viewport);
-  const [coordinates, setCoordinates] = useState({})
 
   useEffect(() => {
     setViewport({
@@ -29,17 +33,74 @@ const Map = () => {
     })
   },[]);
 
-  axios.get("https://api.mapbox.com/optimized-trips/v1/mapbox/driving/-79.340424,43.795712;-75.340424,38.795712?access_token=pk.eyJ1IjoiamVmZnJleWNhbzE5OTgiLCJhIjoiY2tldDIzdWdqMG5xZDJwcGVjYmpiYnE0NiJ9._mpFf2LjB-ZFa1NC5xUU1Q")
-  .then(res => {
-    console.log(res);
-  })
-  .catch(err => {
-    console.log(err);
-  });
+  const directions = '-122.48369693756104,37.83381888486939;-122.49378204345702,37.83368330777276'
+
+  const endpoint = `https://api.mapbox.com/directions/v5/mapbox/driving/${directions}?access_token=${MAPBOX_ACCESS_TOKEN}&geometries=geojson`
+
+  // axios.get(endpoint)
+  // .then(res => {
+  //   console.log(res);
+  // })
+  // .catch(err => {
+  //   console.log(err);
+  // });
+
+const coordinates = [
+  [-122.483696, 37.83382],
+  [-122.484796, 37.834541],
+  [-122.484972, 37.834812],
+  [-122.485015, 37.835188],
+  [-122.484749, 37.835578],
+  [-122.483559, 37.836255],
+  [-122.483244, 37.836552],
+  [-122.482997, 37.837023],
+  [-122.48302, 37.837867],
+  [-122.483276, 37.837908],
+  [-122.483924, 37.838416],
+  [-122.48459, 37.838733],
+  [-122.485872, 37.83901],
+  [-122.493668, 37.842027],
+  [-122.494071, 37.842095],
+  [-122.494363, 37.842023],
+  [-122.495683, 37.841176],
+  [-122.497308, 37.840401],
+  [-122.498403, 37.839405],
+  [-122.499052, 37.838503],
+  [-122.499408, 37.838219],
+  [-122.501374, 37.83683],
+  [-122.502443, 37.836502],
+  [-122.502179, 37.836072],
+  [-122.501171, 37.835571],
+  [-122.500029, 37.835558],
+  [-122.499658, 37.83578],
+  [-122.499325, 37.836345],
+  [-122.499074, 37.836408],
+  [-122.497285, 37.835716],
+  [-122.497031, 37.835859],
+  [-122.497001, 37.836036],
+  [-122.497182, 37.836663],
+  [-122.49711, 37.836898],
+  [-122.496387, 37.837238],
+  [-122.496052, 37.837695],
+  [-122.495679, 37.837725],
+  [-122.49555, 37.837642],
+  [-122.495501, 37.837444],
+  [-122.496244, 37.836784],
+  [-122.496309, 37.83661],
+  [-122.496248, 37.836233],
+  [-122.495194, 37.835411],
+  [-122.494433, 37.834662],
+  [-122.494269, 37.834376],
+  [-122.494149, 37.833745],
+  [-122.494182, 37.833634],
+  [-122.494084, 37.833535],
+  [-122.493627, 37.833603],
+  [-122.493788, 37.833676]
+];
 
   return (
     <Container>
-      <ReactMapGL
+      {/* <ReactMapGL
         width="100%"
         height="100%"
         latitude={viewport.latitude}
@@ -49,7 +110,7 @@ const Map = () => {
         onViewportChange={(nextViewport: Viewport) => setViewport(nextViewport)}
         mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN}
       >
-        {/* {
+        {
           coordinates.map((coordinate) => {
             return (
               <Marker longitude={coordinate[0]} latitude={coordinate[1]}>
@@ -57,7 +118,7 @@ const Map = () => {
               </Marker>
             )
           })
-        } */}
+        }
         
         <Source 
           id="my-data" 
@@ -67,29 +128,7 @@ const Map = () => {
             properties: {},
             geometry: {
               type: 'LineString',
-              coordinates: [
-                [-122.48369693756104, 37.83381888486939],
-                [-122.48348236083984, 37.83317489144141],
-                [-122.48339653015138, 37.83270036637107],
-                [-122.48356819152832, 37.832056363179625],
-                [-122.48404026031496, 37.83114119107971],
-                [-122.48404026031496, 37.83049717427869],
-                [-122.48348236083984, 37.829920943955045],
-                [-122.48356819152832, 37.82954808664175],
-                [-122.48507022857666, 37.82944639795659],
-                [-122.48610019683838, 37.82880236636284],
-                [-122.48695850372314, 37.82931081282506],
-                [-122.48700141906738, 37.83080223556934],
-                [-122.48751640319824, 37.83168351665737],
-                [-122.48803138732912, 37.832158048267786],
-                [-122.48888969421387, 37.83297152392784],
-                [-122.48987674713133, 37.83263257682617],
-                [-122.49043464660643, 37.832937629287755],
-                [-122.49125003814696, 37.832429207817725],
-                [-122.49163627624512, 37.832564787218985],
-                [-122.49223709106445, 37.83337825839438],
-                [-122.49378204345702, 37.83368330777276]
-              ]
+              coordinates
             }
           }}
         >
@@ -108,7 +147,7 @@ const Map = () => {
           />
         </Source>
 
-      </ReactMapGL>
+      </ReactMapGL> */}
     </Container>
   )
 };
