@@ -1,0 +1,7 @@
+const SIDEBAR_WIDTH = 400;
+const MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoiamVmZnJleWNhbzE5OTgiLCJhIjoiY2tldDIzdWdqMG5xZDJwcGVjYmpiYnE0NiJ9._mpFf2LjB-ZFa1NC5xUU1Q";
+
+export {
+  MAPBOX_ACCESS_TOKEN,
+  SIDEBAR_WIDTH,
+}
