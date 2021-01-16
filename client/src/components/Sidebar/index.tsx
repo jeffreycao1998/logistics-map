@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Shipment } from '../../types';
+import { ShipmentType, RouteType } from '../../types';
 
 // components
 import {
@@ -31,8 +31,9 @@ const NavTab = styled(Link)`
   cursor: pointer;
 `
 type Props = {
-  shipments: Array<Shipment>
-  setShipments: React.Dispatch<React.SetStateAction<Array<Shipment>>>
+  shipments: Array<ShipmentType>
+  setShipments: React.Dispatch<React.SetStateAction<Array<ShipmentType>>>
+  setRoutes: React.Dispatch<React.SetStateAction<Array<RouteType>>>
 }
 
 const Sidebar = ({ shipments, setShipments }: Props) => {

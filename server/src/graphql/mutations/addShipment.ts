@@ -1,10 +1,10 @@
+require('dotenv').config();
+import axios from 'axios';
 import { shipments } from '../../index';
-import { Shipment, Route } from '../../types';
+import { ShipmentType, RouteType } from '../../types';
 
-const addShipment = async (_obj: {}, args: Shipment, _context: {}) => {
+const addShipment = async (_obj: {}, args: ShipmentType, _context: {}) => {
   const { pickupLocation, dropoffLocation, description } = args;
-
-  console.log(shipments);
 
   shipments.push({
     pickupLocation,
@@ -12,12 +12,33 @@ const addShipment = async (_obj: {}, args: Shipment, _context: {}) => {
     description
   });
 
-  const routes: Array<Route> = [
-    {
-      type: 'pickup',
-      geojsonCoordinates: [[123,123]]
-    }
-  ];
+  console.log({
+    pickupLocation,
+    dropoffLocation,
+    description
+  })
+
+  const routes: Array<RouteType> = [];
+  // let lastLocation = null;
+
+  for (let shipment of shipments) {
+    const url = 'https://api.mapbox.com/optimized-trips/v1/mapbox' +
+      '/driving' +
+      `/${shipment.pickupLocation[0]},${shipment.pickupLocation[1]};${shipment.dropoffLocation[0]},${shipment.dropoffLocation[1]}` +
+      '?source=first' +
+      '&geometries=geojson' +
+      `&access_token=${process.env.MAPBOX_ACCESS_KEY}`
+    ;
+    
+    await axios.get(url)
+    .then(res => {
+      routes.push({
+        type: 'pickup',
+        geojsonCoordinates: res.data.trips[0].geometry.coordinates
+      })
+    })
+    .catch(err => console.log(err.message));
+  }
 
   return {
     shipments,

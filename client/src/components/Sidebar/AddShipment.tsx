@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Shipment } from '../../types';
+import { ShipmentType } from '../../types';
 import useInput from '../../hooks/useInput';
 import { useMutation } from '@apollo/client';
 import { ADD_SHIPMENT } from '../../graphql/gql';
@@ -50,7 +50,7 @@ const CreateBtn = styled.div`
 `;
 
 type Props= {
-  setShipments: React.Dispatch<React.SetStateAction<Array<Shipment>>>
+  setShipments: React.Dispatch<React.SetStateAction<Array<ShipmentType>>>
 }
 
 const AddShipment = ({ setShipments }: Props) => {
@@ -73,7 +73,12 @@ const AddShipment = ({ setShipments }: Props) => {
       }
     })
     .then(res => {
-      console.log(res);
+      setShipments((prev: any) => {
+        return [
+          ...prev,
+          res.data.addShipment.shipment
+        ]
+      });
     })
     .catch(err => {
       console.log(err);

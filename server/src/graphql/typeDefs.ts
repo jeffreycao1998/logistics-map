@@ -6,7 +6,7 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    addShipment(pickupLocation: [Int]!, dropoffLocation: [Int]!, description: String!): MapData
+    addShipment(pickupLocation: [Float]!, dropoffLocation: [Float]!, description: String!): MapData
   }
 
   type Status {
@@ -14,14 +14,14 @@ const typeDefs = gql`
   }
 
   type Shipment {
-    pickupLocation: [Int]
-    dropoffLocation: [Int]
+    pickupLocation: [Float]
+    dropoffLocation: [Float]
     description: String
   }
 
   type Route {
     type: String
-    geojsonCoordinates: [[Int]]
+    geojsonCoordinates: [[Float]]
   }
 
   type MapData {

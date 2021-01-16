@@ -1,21 +1,16 @@
-export type Viewport = {
+export type ViewportType = {
   longitude: number
   latitude: number
   zoom: number
 }
 
-export type Waypoint = [number, number]
-
-export type Waypoints = Array<Waypoint>
-
-export type Shipment = {
-  pickup: {
-    lng: string
-    lat: string
-  }
-  dropoff: {
-    lng: string
-    lat: string
-  }
+export type ShipmentType = {
+  pickupLocation: [number, number]
+  dropoffLocation: [number, number]
   description: string
+}
+
+export type RouteType = {
+  type: 'pickup' | 'dropoff'
+  geojsonCoordinates: Array<[number, number]>
 }

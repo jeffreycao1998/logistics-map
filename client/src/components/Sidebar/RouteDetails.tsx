@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 // import { useHistory } from 'react-router-dom';
-import { Shipment } from '../../types';
+import { ShipmentType } from '../../types';
 
 const Container = styled.div`
   width: 100%;
@@ -22,23 +22,23 @@ const WaypointContainer = styled.div`
 `;
 
 type Props = {
-  shipments: Array<Shipment>
+  shipments: Array<ShipmentType>
 }
 
 const RouteDetails = ({ shipments }: Props) => {
   return (
     <Container>
       {
-        shipments.length > 0 && shipments.map(({ pickup, dropoff, description }: Shipment) => {
+        shipments.length > 0 && shipments.map(({ pickupLocation, dropoffLocation, description }: ShipmentType) => {
           return (
-            <WaypointContainer key={pickup.lng + pickup.lat}>
+            <WaypointContainer key={pickupLocation[0] + pickupLocation[1] + dropoffLocation[0] + dropoffLocation[1]}>
               <div className='info pickup'>
                 <h4 className='title'>Pickup</h4>
-                <p>{`[${ pickup.lng }, ${ pickup.lat }]`}</p>
+                <p>{`[${ pickupLocation[0] }, ${ pickupLocation[1] }]`}</p>
               </div>
               <div className='info dropoff'>
                 <h4 className='title'>Dropoff</h4>
-                <p>{`[${ dropoff.lng }, ${ dropoff.lat }]`}</p>
+                <p>{`[${ dropoffLocation[0] }, ${ dropoffLocation[1] }]`}</p>
               </div>
               <div className='info description'>
                 <h4 className='title'>Description</h4>
