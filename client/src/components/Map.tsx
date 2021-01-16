@@ -64,7 +64,8 @@ const Map = ({ shipments, routes }: Props) => {
         {
           routes.length > 0 && routes.map((route: RouteType) => {
             return (
-              <Source 
+              <Source
+                key={`${route.geojsonCoordinates[0][0]}${route.geojsonCoordinates[0][1]}`}
                 id={`${route.geojsonCoordinates[0][0]}${route.geojsonCoordinates[0][1]}`} 
                 type="geojson" 
                 data={{
@@ -85,7 +86,7 @@ const Map = ({ shipments, routes }: Props) => {
                     'line-cap': 'round'
                   }}
                   paint={{
-                    'line-color': '#029ffa',
+                    'line-color': `${route.type === 'pickup' ? '#fae902' : '#029ffa'}`,
                     'line-width': 8
                   }}
                 />

@@ -9,13 +9,8 @@ const server = new ApolloServer({
   resolvers,
 });
 
-export const shipments = [
-  // {
-  //   pickupLocation: [ 123, 123 ],
-  //   dropoffLocation: [ 321, 321 ],
-  //   description: 'asdas'
-  // }
-] as Array<ShipmentType>;
+export const shipments = [] as Array<ShipmentType>;
+
 
 server.listen().then(({ url }) => {
   console.log(`🚀  Server ready at ${url}`);
