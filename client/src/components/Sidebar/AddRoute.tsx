@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
+import { Shipment } from '../../types';
+import useInput from '../../hooks/useInput';
 
 const Container = styled.div`
   height: 100%;
   width: 100%;
 `;
 
-const Coordinates = styled.div`
+const Section = styled.div`
   padding: 16px;
   border-bottom: 1px solid grey;
   width: 100%;
@@ -16,25 +18,13 @@ const Coordinates = styled.div`
     margin-bottom: 16px;
   }
 
-  .input-fields {
+  .col-2 {
     display: flex;
     justify-content: space-between;
     width: 100%;
 
-    .input-field {
-      width: 47%;
-
-      p {
-        margin-bottom: 8px;
-      }
-
-      input {
-        width: 100%;
-        border-radius: 4px;
-        overflow: hidden;
-        padding: 4px 10px;
-        border: 1px solid grey;
-      }
+    > * {
+      width: 48%;
     }
   }
 `;
@@ -58,53 +48,81 @@ const CreateBtn = styled.div`
   cursor: pointer;
 `;
 
-const AddRoute = () => {
+type Props= {
+  setShipments: React.Dispatch<React.SetStateAction<Array<Shipment>>>
+}
+
+const AddRoute = ({ setShipments }: Props) => {
   const history = useHistory();
 
-  const [pickupLng, setPickupLng] = useState('');
-  const [pickupLat, setPickupLat] = useState('');
+  const [shipmentId, shipmentIdInput] = useInput({name: 'Shipment ID', type: 'text'});
 
-  const [dropoffLng, setDropoffLng] = useState('');
-  const [dropoffLat, setDropoffLat] = useState('');
+  const [pickupLng, pickupLngInput] = useInput({name: 'Longitude', type: 'text'});
+  const [pickupLat, pickupLatInput] = useInput({name: 'Latitude', type: 'text'});
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>, setState: React.Dispatch<React.SetStateAction<string>>) => {
-    setState(e.target.value);
-  };
+  const [dropoffLng, dropoffLngInput] = useInput({name: 'Longitude', type: 'text'});
+  const [dropoffLat, dropoffLatInput] = useInput({name: 'Latitude', type: 'text'});
+
+  const [description, descriptionInput] = useInput({name: 'Description', type: 'textarea'});
 
   const handleCreate = () => {
-    console.log([pickupLng, pickupLat]);
+    console.log({
+      shipmentId,
+      pickupLng,
+      pickupLat,
+      dropoffLng,
+      dropoffLat
+    })
+
+    setShipments((prev: Array<Shipment>) => {
+      return [
+        ...prev,
+        {
+          id: shipmentId as string,
+          pickup: {
+              lng: pickupLng as string,
+              lat: pickupLat as string,
+          },
+          dropoff: {
+              lng: dropoffLng as string,
+              lat: dropoffLat as string
+          },
+          description: description as string,
+        }
+      ]
+    });
+
     history.replace('/info');
   };
 
   return (
     <Container>
-      <Coordinates>
-        <h3 className='title'>Pickup</h3>
-        <div className='input-fields'>
-          <label className='input-field'>
-            <p>Latitude</p>
-            <input type='string' value={pickupLng} onChange={(e) => handleChange(e, setPickupLng)}/>
-          </label>
-          <label className='input-field'>
-            <p>Latitude</p>
-            <input type='string' value={pickupLat} onChange={(e) => handleChange(e, setPickupLat)}/>
-          </label>
-        </div>
-      </Coordinates>
 
-      <Coordinates>
-        <h3 className='title'>Dropoff</h3>
-        <div className='input-fields'>
-          <label className='input-field'>
-            <p>Latitude</p>
-            <input type='string' value={dropoffLng} onChange={(e) => handleChange(e, setDropoffLng)}/>
-          </label>
-          <label className='input-field'>
-            <p>Latitude</p>
-            <input type='string' value={dropoffLat} onChange={(e) => handleChange(e, setDropoffLat)}/>
-          </label>
+      <Section>
+        <h3 className='title'>Shipment ID</h3>
+        { shipmentIdInput }
+      </Section>
+
+      <Section>
+        <h3 className='title'>Pickup</h3>
+        <div className='col-2'>
+          { pickupLngInput }
+          { pickupLatInput }
         </div>
-      </Coordinates>
+      </Section>
+
+      <Section>
+        <h3 className='title'>Dropoff</h3>
+        <div className='col-2'>
+          { dropoffLngInput }
+          { dropoffLatInput }
+        </div>
+      </Section>
+
+      <Section>
+        <h3 className='title'>Description</h3>
+        { descriptionInput }
+      </Section>
 
       <CreateBtn onClick={handleCreate}>CREATE</CreateBtn>
     </Container>

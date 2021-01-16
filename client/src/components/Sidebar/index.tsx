@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Waypoints } from '../../types';
+import { Shipment } from '../../types';
 
 // components
 import {
@@ -31,11 +31,11 @@ const NavTab = styled(Link)`
   cursor: pointer;
 `
 type Props = {
-  waypoints: Waypoints
-  setWaypoints: React.Dispatch<React.SetStateAction<Waypoints>>
+  shipments: Array<Shipment>
+  setShipments: React.Dispatch<React.SetStateAction<Array<Shipment>>>
 }
 
-const Sidebar = ({ waypoints, setWaypoints }: Props) => {
+const Sidebar = ({ shipments, setShipments }: Props) => {
   return (
     <Router>
       <Container>
@@ -46,10 +46,10 @@ const Sidebar = ({ waypoints, setWaypoints }: Props) => {
 
         <Switch>
           <Route path='/info'>
-            <RouteDetails />
+            <RouteDetails shipments={shipments}/>
           </Route>
           <Route path='/'>
-            <AddRoute />
+            <AddRoute setShipments={setShipments} />
           </Route>
         </Switch>
       </Container>
