@@ -29,13 +29,9 @@ const RouteDetails = ({ shipments }: Props) => {
   return (
     <Container>
       {
-        shipments.length > 0 && shipments.map(({ id, pickup, dropoff, description }: Shipment) => {
+        shipments.length > 0 && shipments.map(({ pickup, dropoff, description }: Shipment) => {
           return (
-            <WaypointContainer key={id}>
-              <div className='info shipment-id'>
-                <h4 className='title'>Shipment Id</h4>
-                <p>{ id }</p>
-              </div>
+            <WaypointContainer key={pickup.lng + pickup.lat}>
               <div className='info pickup'>
                 <h4 className='title'>Pickup</h4>
                 <p>{`[${ pickup.lng }, ${ pickup.lat }]`}</p>

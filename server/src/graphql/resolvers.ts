@@ -1,12 +1,16 @@
+// Queries
 import sayHi from './queries/sayHi';
+
+// Mutations
+import addShipment from './mutations/addShipment';
 
 const resolvers = {
   Query: {
     sayHi,
   },
-  // Mutation: {
-
-  // }
+  Mutation: {
+    addShipment,
+  }
 }
 
 export default resolvers;

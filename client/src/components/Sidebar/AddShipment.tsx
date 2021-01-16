@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { useHistory } from 'react-router-dom';
 import { Shipment } from '../../types';
 import useInput from '../../hooks/useInput';
+import { useMutation } from '@apollo/client';
+import { ADD_SHIPMENT } from '../../graphql/gql';
 
 const Container = styled.div`
   height: 100%;
@@ -18,7 +19,7 @@ const Section = styled.div`
     margin-bottom: 16px;
   }
 
-  .col-2 {
+  .cols-2 {
     display: flex;
     justify-content: space-between;
     width: 100%;
@@ -52,11 +53,7 @@ type Props= {
   setShipments: React.Dispatch<React.SetStateAction<Array<Shipment>>>
 }
 
-const AddRoute = ({ setShipments }: Props) => {
-  const history = useHistory();
-
-  const [shipmentId, shipmentIdInput] = useInput({name: 'Shipment ID', type: 'text'});
-
+const AddShipment = ({ setShipments }: Props) => {
   const [pickupLng, pickupLngInput] = useInput({name: 'Longitude', type: 'text'});
   const [pickupLat, pickupLatInput] = useInput({name: 'Latitude', type: 'text'});
 
@@ -65,47 +62,30 @@ const AddRoute = ({ setShipments }: Props) => {
 
   const [description, descriptionInput] = useInput({name: 'Description', type: 'textarea'});
 
+  const [addShipment] = useMutation(ADD_SHIPMENT);
+
   const handleCreate = () => {
-    console.log({
-      shipmentId,
-      pickupLng,
-      pickupLat,
-      dropoffLng,
-      dropoffLat
+    addShipment({
+      variables: {
+        pickupLocation: [Number(pickupLng), Number(pickupLat)],
+        dropoffLocation: [Number(dropoffLng), Number(dropoffLat)],
+        description
+      }
     })
-
-    setShipments((prev: Array<Shipment>) => {
-      return [
-        ...prev,
-        {
-          id: shipmentId as string,
-          pickup: {
-              lng: pickupLng as string,
-              lat: pickupLat as string,
-          },
-          dropoff: {
-              lng: dropoffLng as string,
-              lat: dropoffLat as string
-          },
-          description: description as string,
-        }
-      ]
-    });
-
-    history.replace('/info');
+    .then(res => {
+      console.log(res);
+    })
+    .catch(err => {
+      console.log(err);
+    })
   };
 
   return (
     <Container>
 
       <Section>
-        <h3 className='title'>Shipment ID</h3>
-        { shipmentIdInput }
-      </Section>
-
-      <Section>
         <h3 className='title'>Pickup</h3>
-        <div className='col-2'>
+        <div className='cols-2'>
           { pickupLngInput }
           { pickupLatInput }
         </div>
@@ -113,7 +93,7 @@ const AddRoute = ({ setShipments }: Props) => {
 
       <Section>
         <h3 className='title'>Dropoff</h3>
-        <div className='col-2'>
+        <div className='cols-2'>
           { dropoffLngInput }
           { dropoffLatInput }
         </div>
@@ -129,4 +109,4 @@ const AddRoute = ({ setShipments }: Props) => {
   )
 };
 
-export default AddRoute;
+export default AddShipment;

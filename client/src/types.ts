@@ -9,7 +9,6 @@ export type Waypoint = [number, number]
 export type Waypoints = Array<Waypoint>
 
 export type Shipment = {
-  id: string
   pickup: {
     lng: string
     lat: string

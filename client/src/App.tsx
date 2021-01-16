@@ -17,7 +17,6 @@ const Container = styled.div`
 function App() {
   const [shipments, setShipments] = useState([
     {
-      id: '123456789',
       pickup: {
         lng: '-79.340424',
         lat: '43.795712',
@@ -29,7 +28,6 @@ function App() {
       description: 'my house to toronto zoo'
     },
     {
-      id: '135792468',
       pickup: {
         lng: '-79.5395',
         lat: '43.8430'

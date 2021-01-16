@@ -43,22 +43,22 @@ const Map = ({ shipments, setShipments }: Props) => {
   const optimizationEndpoint = `https://api.mapbox.com/optimized-trips/v1/mapbox/driving/${formattedWaypoints}?source=first&roundtrip=true&geometries=geojson&access_token=${MAPBOX_ACCESS_TOKEN}`
 
   useEffect(() => {
-    axios.get(optimizationEndpoint)
-    .then(res => {
-      setCoordinates(res.data.trips[0].geometry.coordinates);
+    // axios.get(optimizationEndpoint)
+    // .then(res => {
+    //   setCoordinates(res.data.trips[0].geometry.coordinates);
 
-      const waypoints = res.data.waypoints.map((waypoint: any) => {
-        return {
-          location: waypoint.location,
-          waypointIndex: waypoint.waypoint_index
-        }
-      });
+    //   const waypoints = res.data.waypoints.map((waypoint: any) => {
+    //     return {
+    //       location: waypoint.location,
+    //       waypointIndex: waypoint.waypoint_index
+    //     }
+    //   });
 
-      setWaypoints([...waypoints])
-    })
-    .catch(err => {
-      console.log(err);
-    });
+    //   setWaypoints([...waypoints])
+    // })
+    // .catch(err => {
+    //   console.log(err);
+    // });
   },[shipments]);
 
   return (

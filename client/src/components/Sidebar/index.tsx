@@ -9,7 +9,7 @@ import {
   Route,
   Link
 } from "react-router-dom";
-import AddRoute from './AddRoute';
+import AddRoute from './AddShipment';
 import RouteDetails from './RouteDetails';
 
 const Container = styled.div`
