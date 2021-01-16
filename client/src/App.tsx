@@ -15,24 +15,7 @@ const Container = styled.div`
 `;
 
 function App() {
-  // const [waypoints, setWaypoints] = useState([] as Waypoints);
-  const [waypoints, setWaypoints] = useState([
-    [-122.48369693756104,37.83381888486939],
-    [-122.49378204345702,37.83368330777276]
-  ] as Waypoints);
   const [shipments, setShipments] = useState([
-    {
-      id: '135792468',
-      pickup: {
-        lng: '-79.5395',
-        lat: '43.8430'
-      },
-      dropoff: {
-        lng: '-79.3871',
-        lat: '43.6426',
-      },
-      description: 'wonderland to pacific mall'
-    },
     {
       id: '123456789',
       pickup: {
@@ -44,6 +27,18 @@ function App() {
         lat: '43.8207'
       },
       description: 'my house to toronto zoo'
+    },
+    {
+      id: '135792468',
+      pickup: {
+        lng: '-79.5395',
+        lat: '43.8430'
+      },
+      dropoff: {
+        lng: '-79.3871',
+        lat: '43.6426',
+      },
+      description: 'wonderland to pacific mall'
     },
   ])
 

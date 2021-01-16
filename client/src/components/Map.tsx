@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { MAPBOX_ACCESS_TOKEN } from '../util/constants';
-import { Shipment, Viewport } from '../types';
+import { Shipment, Viewport, Waypoints } from '../types';
 import axios from 'axios';
 
 // Components
@@ -24,7 +24,8 @@ const Map = ({ shipments, setShipments }: Props) => {
     latitude: 0,
     zoom: 0
   } as Viewport);
-  const [coordinates, setCoordinates] = useState([] as Array<[number, number]>)
+  const [coordinates, setCoordinates] = useState([] as Array<[number, number]>);
+  const [waypoints, setWaypoints] = useState([] as any);
 
   useEffect(() => {
     setViewport({
@@ -34,17 +35,26 @@ const Map = ({ shipments, setShipments }: Props) => {
     })
   },[]);
 
-  const waypoints = shipments.map(({pickup, dropoff}: Shipment) => {
+  const formattedWaypoints = shipments.map(({pickup, dropoff}: Shipment) => {
     return `${pickup.lng},${pickup.lat};${dropoff.lng},${dropoff.lat}`;
   }).join(';');
 
   // const endpoint = `https://api.mapbox.com/directions/v5/mapbox/driving/${directions}?access_token=${MAPBOX_ACCESS_TOKEN}&geometries=geojson`
-  const optimizationEndpoint = `https://api.mapbox.com/optimized-trips/v1/mapbox/driving/${waypoints}?source=first&roundtrip=true&geometries=geojson&access_token=${MAPBOX_ACCESS_TOKEN}`
+  const optimizationEndpoint = `https://api.mapbox.com/optimized-trips/v1/mapbox/driving/${formattedWaypoints}?source=first&roundtrip=true&geometries=geojson&access_token=${MAPBOX_ACCESS_TOKEN}`
 
   useEffect(() => {
     axios.get(optimizationEndpoint)
     .then(res => {
       setCoordinates(res.data.trips[0].geometry.coordinates);
+
+      const waypoints = res.data.waypoints.map((waypoint: any) => {
+        return {
+          location: waypoint.location,
+          waypointIndex: waypoint.waypoint_index
+        }
+      });
+
+      setWaypoints([...waypoints])
     })
     .catch(err => {
       console.log(err);
@@ -64,16 +74,11 @@ const Map = ({ shipments, setShipments }: Props) => {
         mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN}
       >
         {
-          shipments.length > 0 && shipments.map(({pickup, dropoff}: Shipment, index: number) => {
+          waypoints.length > 0 && waypoints.map((waypoint: any) => {
             return (
-              <>
-                <Marker longitude={Number(pickup.lng)} latitude={Number(pickup.lat)}>
-                  <StyledMarker position={index * 2 + 1}/>
-                </Marker>
-                <Marker longitude={Number(dropoff.lng)} latitude={Number(dropoff.lat)}>
-                  <StyledMarker position={index * 2 + 2}/>
-                </Marker>
-              </>
+              <Marker longitude={ waypoint.location[0] } latitude={ waypoint.location[1] }>
+                <StyledMarker position={ waypoint.waypointIndex + 1 }/>
+              </Marker>
             )
           })
         }
