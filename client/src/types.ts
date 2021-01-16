@@ -1,5 +1,5 @@
-export type MapOptions = {
-  lng: number
-  lat: number
+export type Viewport = {
+  longitude: number
+  latitude: number
   zoom: number
 }
