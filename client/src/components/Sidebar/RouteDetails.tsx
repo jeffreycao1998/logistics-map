@@ -51,7 +51,6 @@ const RouteDetails = ({ shipments }: Props) => {
     <Container>
       {
         shipments.length > 0 && shipments.map(({ id, pickupLocation, dropoffLocation, description }: ShipmentType) => {
-          console.log(pickupLocation, dropoffLocation);
           return (
             <WaypointContainer key={pickupLocation[0] + pickupLocation[1] + dropoffLocation[0] + dropoffLocation[1]}>
               <div className='info pickup'>

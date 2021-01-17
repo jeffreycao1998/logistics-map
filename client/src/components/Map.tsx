@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { MAPBOX_ACCESS_TOKEN } from '../util/constants';
 import { ViewportType, ShipmentType, RouteType } from '../types';
-import shortid from 'shortid';
+import { MAPBOX_ACCESS_TOKEN } from '../util/constants';
+// import calcMapCenter from '../util/calcMapCenter';
+import calcViewport from '../util/calcViewport';
 
 // Components
-import ReactMapGL, { Marker, Source, Layer } from 'react-map-gl';
+import ReactMapGL, { Marker, Source, Layer, FlyToInterpolator } from 'react-map-gl';
 import StyledMarker from './Marker';
+import calcMapZoom from '../util/calcViewport';
 
 const Container = styled.div`
   width: calc(100% - 400px);
@@ -27,10 +29,12 @@ const Map = ({ shipments, routes }: Props) => {
 
   useEffect(() => {
     if (shipments.length > 0) {
+      const { center, zoom } = calcViewport(shipments);
+
       setViewport({
-        longitude: (shipments[0].pickupLocation[0] + shipments[0].dropoffLocation[0]) / 2,
-        latitude: (shipments[0].pickupLocation[1] + shipments[0].dropoffLocation[1]) / 2,
-        zoom: 8
+        longitude: center[0],
+        latitude: center[1],
+        zoom: zoom - 1
       })
     }
   },[shipments]);
@@ -47,8 +51,11 @@ const Map = ({ shipments, routes }: Props) => {
         latitude={viewport.latitude}
         longitude={viewport.longitude}
         zoom={viewport.zoom}
+        
         mapStyle="mapbox://styles/mapbox/dark-v9"
         onViewportChange={(nextViewport: ViewportType) => setViewport(nextViewport)}
+        transitionDuration={500}
+        transitionInterpolator={new FlyToInterpolator()}
         mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN}
       >
         {
