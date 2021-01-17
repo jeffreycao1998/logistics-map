@@ -39,10 +39,6 @@ const Map = ({ shipments, routes }: Props) => {
     }
   },[shipments]);
 
-  useEffect(() => {
-    console.log(routes);
-  },[routes]);
-
   return (
     <Container>
       <ReactMapGL
@@ -54,7 +50,7 @@ const Map = ({ shipments, routes }: Props) => {
         
         mapStyle="mapbox://styles/mapbox/dark-v9"
         onViewportChange={(nextViewport: ViewportType) => setViewport(nextViewport)}
-        transitionDuration={500}
+        transitionDuration={200}
         transitionInterpolator={new FlyToInterpolator()}
         mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN}
       >
@@ -62,17 +58,17 @@ const Map = ({ shipments, routes }: Props) => {
           routes.length > 0 && routes.map(({id, geojsonCoordinates, sequence}: RouteType, index: number) => {
             const lastIndex = geojsonCoordinates.length - 1;
             return (
-              <>
-                <Marker key={index + id + 'first'} draggable={true} longitude={ geojsonCoordinates[0][0] } latitude={ geojsonCoordinates[0][1] }>
+              <div key={id}>
+                <Marker key={id + 'first'} draggable={true} longitude={ geojsonCoordinates[0][0] } latitude={ geojsonCoordinates[0][1] }>
                   <StyledMarker position={ sequence + 1 }/>
                 </Marker>
                 {
                   index === routes.length - 1 &&
-                  <Marker key={index + id + 'second'} longitude={ geojsonCoordinates[lastIndex][0] } latitude={ geojsonCoordinates[lastIndex][1] }>
+                  <Marker key={id + 'second'} longitude={ geojsonCoordinates[lastIndex][0] } latitude={ geojsonCoordinates[lastIndex][1] }>
                     <StyledMarker position={ sequence + 2 }/>
                   </Marker>
                 }
-              </>
+              </div>
             )
           })
         }

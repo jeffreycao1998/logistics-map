@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { RouteType, ShipmentType } from '../../types';
 import useInput from '../../hooks/useInput';
@@ -31,7 +31,7 @@ const Section = styled.div`
 `;
 
 const CreateBtn = styled.div`
-  margin: 32px 32px;
+  margin: 32px 32px 16px 32px;
   width: 336x;
   text-align: center;
   padding: 16px;
@@ -41,12 +41,19 @@ const CreateBtn = styled.div`
   font-weight: 600;
   letter-spacing: 1px;
   border-radius: 4px;
+  user-select: none;
 
   :hover {
     background-color: #017001;
   }
 
   cursor: pointer;
+`;
+
+const Message = styled.p`
+  margin-left: 32px;
+  color: #ff0033;
+  font-weight: 500;
 `;
 
 type Props= {
@@ -63,6 +70,8 @@ const AddShipment = ({ shipments, setShipments, setRoutes }: Props) => {
   const [dropoffLat, dropoffLatInput] = useInput({name: 'Latitude', type: 'text'});
 
   const [description, descriptionInput] = useInput({name: 'Description', type: 'textarea'});
+
+  const [message, setMessage] = useState('');
 
   const [addShipment] = useMutation(ADD_SHIPMENT);
 
@@ -91,16 +100,20 @@ const AddShipment = ({ shipments, setShipments, setRoutes }: Props) => {
       //   dropoffLocation: [Number(dropoffLng), Number(dropoffLat)],
       //   description
       // }
-      variables: data[shipments.length]
+      variables: data[0]
     })
     .then(res => {
       setShipments([...res.data.addShipment.shipments]);
       setRoutes([...res.data.addShipment.routes]);
     })
     .catch(err => {
-      console.log(err);
+      setMessage(err.message);
     })
   };
+
+  useEffect(() => {
+    setMessage('');
+  },[pickupLng, pickupLat, dropoffLng, dropoffLat, description])
 
   return (
     <Container>
@@ -127,6 +140,9 @@ const AddShipment = ({ shipments, setShipments, setRoutes }: Props) => {
       </Section>
 
       <CreateBtn onClick={handleCreate}>CREATE</CreateBtn>
+      
+      <Message>{ message }</Message>
+
     </Container>
   )
 };

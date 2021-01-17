@@ -7,7 +7,7 @@ const Container = styled.div`
   flex-direction: column;
 
   label {
-    margin-bottom: 12px;
+    padding-bottom: 12px;
     font-size: 14px;
   }
 
@@ -29,6 +29,7 @@ const Container = styled.div`
     line-height: 1.35;
     resize: none;
     min-height: 150px;
+    overflow-y: auto;
   }
 `;
 
