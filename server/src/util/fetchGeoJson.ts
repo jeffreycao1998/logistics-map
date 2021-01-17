@@ -14,10 +14,8 @@ const fetchGeoJson = async (url: string, routes: Array<RouteType>, lastLocation:
       geojsonCoordinates
     };
     routes.push(newRoute);
-    
-    //@ts-ignore
-    shipment[`${type}Location`][2] = newRoute.sequence;
 
+    // set the longitude/latitude of the last location you were at
     lastLocation[0] = geojsonCoordinates[geojsonCoordinates.length - 1][0];
     lastLocation[1] = geojsonCoordinates[geojsonCoordinates.length - 1][1];
   })
