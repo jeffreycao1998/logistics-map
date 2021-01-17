@@ -98,7 +98,7 @@ const Map = ({ shipments, routes }: Props) => {
                   }}
                   paint={{
                     'line-color': `${route.type === 'pickup' ? '#fae902' : '#029ffa'}`,
-                    'line-width': 8
+                    'line-width': 6
                   }}
                 />
               </Source>

@@ -134,7 +134,6 @@ const DeleteShipmentModal = ({
     })
     .catch(err => {
       setMessage(err.message);
-      console.log(err);
     });
   };
   

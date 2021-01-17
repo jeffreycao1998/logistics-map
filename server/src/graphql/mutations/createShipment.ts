@@ -25,7 +25,7 @@ const createShipment = async (_obj: {}, args: ShipmentType, _context: {}) => {
     description
   });
 
-  const routes = calcOptimalRoute(shipments);
+  const routes = await calcOptimalRoute(shipments);
 
   return {
     shipments,
