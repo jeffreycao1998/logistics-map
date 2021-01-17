@@ -1,27 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import { createGlobalStyle } from 'styled-components';
-
+import GlobalStyles from './globalstyles';
 import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
-
-// Styled Components
-const GlobalStyle = createGlobalStyle`
-  body, html {
-    background-color: #f4f4f2;
-    width: 100%;
-    height: 100vh;
-    font-family: 'Inter', 'sans-serif';
-    overflow: hidden;
-  }
-
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    color: rgb(32, 34, 35);
-  }
-`;
 
 // GraphQL
 const client = new ApolloClient({
@@ -31,8 +12,7 @@ const client = new ApolloClient({
 
 ReactDOM.render(
   <React.StrictMode>
-    <GlobalStyle />
-    {/* @ts-ignore */}
+    <GlobalStyles />
     <ApolloProvider client={client}>
       <App />
     </ApolloProvider>

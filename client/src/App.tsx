@@ -30,14 +30,14 @@ function App() {
 
   return (
     <Container className="App">
-      <Map
-        shipments={shipments}
-        routes={routes}
-      />
       <Sidebar
         shipments={shipments}
         setShipments={setShipments}
         setRoutes={setRoutes}
+      />
+      <Map
+        shipments={shipments}
+        routes={routes}
       />
     </Container>
   );

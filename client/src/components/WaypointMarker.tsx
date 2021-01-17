@@ -19,7 +19,7 @@ type Props = {
   position: number
 }
 
-const Marker = ({ position }: Props) => {
+const WaypointMarker = ({ position }: Props) => {
   return (
     <Container>
       { position }
@@ -27,4 +27,4 @@ const Marker = ({ position }: Props) => {
   )
 };
 
-export default Marker;
+export default WaypointMarker;

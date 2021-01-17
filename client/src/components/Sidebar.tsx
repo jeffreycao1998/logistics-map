@@ -10,17 +10,31 @@ const Container = styled.div`
   width: 400px;
   height: 100vh;
   border-left: 1px solid grey;
+  z-index: 1;
+`;
+
+const Header = styled.div`
+  width: 100%;
+  height: 52px;
+  border-bottom: 1px solid lightgrey;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 16px;
 `;
 
 const ContentContainer = styled.div`
   width: 100%;
-  height: 100%;
+  height: calc(100% - 52px);
+  overflow-y: auto;
 `;
 
 const WaypointContainer = styled.div`
+  margin: 16px;
+  background-color: white;
   padding: 16px;
-  border-bottom: 1px solid grey;
-  overflow-y: auto;
+  border-radius: 8px;
+  box-shadow: 0 7px 10px -5px rgba(150,170,180,0.5);
 
   .title {
     margin: 8px 0;
@@ -56,17 +70,18 @@ const WaypointContainer = styled.div`
 `;
 
 type ActionBtnProps = {
-  color: 'blue' | 'red'
+  color: 'blue' | 'red' | 'green'
 }
 
 const ActionBtn = styled.div`
-  min-width: 100px;
-  min-height: 28px;
+  padding: 6px 10px;
   color: white;
   border-radius: 4px;
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 14px;
+  user-select: none;
   cursor: pointer;
 
   ${({color}: ActionBtnProps) => {
@@ -80,7 +95,17 @@ const ActionBtn = styled.div`
         background-color: #da3a2f;
       `;
     }
+    if (color === 'green') {
+      return `
+        background-color: #028102;
+      `;
+    }
   }}
+
+  ion-icon {
+    color: white;
+    margin-right: 4px;
+  }
 `;
 
 type Props = {
@@ -95,6 +120,13 @@ const Sidebar = ({ shipments, setShipments, setRoutes }: Props) => {
   
   return (
     <Container>
+      <Header>
+        <ActionBtn color='green' onClick={() => setShowCreateModal(true)}>
+          {/* @ts-ignore */}
+          <ion-icon name="duplicate-outline"></ion-icon>
+          Create
+        </ActionBtn>
+      </Header>
       <ContentContainer>
         {
           shipments.length > 0 && shipments.map(({ id, pickupLocation, dropoffLocation, description }: ShipmentType) => {
@@ -118,8 +150,16 @@ const Sidebar = ({ shipments, setShipments, setRoutes }: Props) => {
                   <p>{ description }</p>
                 </div>
                 <div className='actions'>
-                  <ActionBtn color='blue' onClick={() => setShowEditModal(true)}>Edit</ActionBtn>
-                  <ActionBtn color='red' onClick={() => setShowCreateModal(true)}>Delete</ActionBtn>
+                  <ActionBtn color='blue' onClick={() => setShowEditModal(true)}>
+                    {/* @ts-ignore */}
+                    <ion-icon name="create-outline"></ion-icon>
+                    Edit
+                  </ActionBtn>
+                  <ActionBtn color='red'>
+                    {/* @ts-ignore */}
+                    <ion-icon name="trash-outline"></ion-icon>
+                    Delete
+                  </ActionBtn>
                 </div>
 
                 {
