@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-// import { useHistory } from 'react-router-dom';
 import { ShipmentType } from '../../types';
+
+// Components
+import EditModal from '../Modals/EditModal';
 
 const Container = styled.div`
   width: 100%;
@@ -11,16 +13,15 @@ const Container = styled.div`
 const WaypointContainer = styled.div`
   padding: 16px;
   border-bottom: 1px solid grey;
+  overflow-y: auto;
 
   .title {
     margin: 8px 0;
   }
 
-  > .info:not(:last-child) {
-    margin-bottom: 24px;
-  }
-
   .info {
+    margin-bottom: 24px;
+
     .header {
       display: flex;
       align-items: center;
@@ -40,6 +41,39 @@ const WaypointContainer = styled.div`
       }
     }
   }
+
+  .actions {
+    display: flex;
+    justify-content: space-between;
+  }
+`;
+
+type ActionBtnProps = {
+  color: 'blue' | 'red'
+}
+
+const ActionBtn = styled.div`
+  min-width: 100px;
+  min-height: 28px;
+  color: white;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+
+  ${({color}: ActionBtnProps) => {
+    if (color === 'blue') {
+      return `
+        background-color: #188bb1;
+      `;
+    }
+    if (color === 'red') {
+      return `
+        background-color: #da3a2f;
+      `;
+    }
+  }}
 `;
 
 type Props = {
@@ -47,6 +81,8 @@ type Props = {
 }
 
 const RouteDetails = ({ shipments }: Props) => {
+  const [showEditModal, setShowEditModal] = useState(true);
+
   return (
     <Container>
       {
@@ -70,6 +106,23 @@ const RouteDetails = ({ shipments }: Props) => {
                 <h4 className='title'>Description</h4>
                 <p>{ description }</p>
               </div>
+              <div className='actions'>
+                <ActionBtn color={'blue'} onClick={() => setShowEditModal(true)}>Edit</ActionBtn>
+                <ActionBtn color={'red'}>Delete</ActionBtn>
+              </div>
+
+              {
+                showEditModal &&
+                <EditModal
+                  shipmentId={id}
+                  setShowModal={setShowEditModal}
+                  initPickupLng={pickupLocation[0].toString()}
+                  initPickupLat={pickupLocation[1].toString()}
+                  initDropoffLng={dropoffLocation[0].toString()}
+                  initDropoffLat={dropoffLocation[1].toString()}
+                  initDescription={description}
+                />
+              }
             </WaypointContainer>
           )
         })

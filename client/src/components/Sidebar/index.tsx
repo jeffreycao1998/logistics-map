@@ -41,12 +41,12 @@ const Sidebar = ({ shipments, setShipments, setRoutes }: Props) => {
     <Router>
       <Container>
         <Navigation>
-          <NavTab to='/create'>Home</NavTab>
-          <NavTab to='/info'>Info</NavTab>
+          <NavTab to='/create'>Create</NavTab>
+          <NavTab to='/routes'>Routes</NavTab>
         </Navigation>
 
         <Switch>
-          <Route path='/info'>
+          <Route path='/routes'>
             <RouteDetails shipments={shipments}/>
           </Route>
           <Route path='/'>

@@ -8,7 +8,6 @@ import calcViewport from '../util/calcViewport';
 // Components
 import ReactMapGL, { Marker, Source, Layer, FlyToInterpolator } from 'react-map-gl';
 import StyledMarker from './Marker';
-import calcMapZoom from '../util/calcViewport';
 
 const Container = styled.div`
   width: calc(100% - 400px);
