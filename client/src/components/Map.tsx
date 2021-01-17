@@ -52,17 +52,17 @@ const Map = ({ shipments, routes }: Props) => {
         mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN}
       >
         {
-          routes.length > 0 && routes.map(({geojsonCoordinates, sequence}: RouteType, index: number) => {
+          routes.length > 0 && routes.map(({id, geojsonCoordinates, sequence}: RouteType, index: number) => {
             const lastIndex = geojsonCoordinates.length - 1;
             return (
               <>
-                <Marker key={index + geojsonCoordinates[0][0]} draggable={true} longitude={ geojsonCoordinates[0][0] } latitude={ geojsonCoordinates[0][1] }>
-                  <StyledMarker position={ index + 1 }/>
+                <Marker key={index + id + 'first'} draggable={true} longitude={ geojsonCoordinates[0][0] } latitude={ geojsonCoordinates[0][1] }>
+                  <StyledMarker position={ sequence + 1 }/>
                 </Marker>
                 {
                   index === routes.length - 1 &&
-                  <Marker key={index + geojsonCoordinates[lastIndex][0]} longitude={ geojsonCoordinates[lastIndex][0] } latitude={ geojsonCoordinates[lastIndex][1] }>
-                    <StyledMarker position={ index + 2 }/>
+                  <Marker key={index + id + 'second'} longitude={ geojsonCoordinates[lastIndex][0] } latitude={ geojsonCoordinates[lastIndex][1] }>
+                    <StyledMarker position={ sequence + 2 }/>
                   </Marker>
                 }
               </>
@@ -74,8 +74,8 @@ const Map = ({ shipments, routes }: Props) => {
           routes.length > 0 && routes.map((route: RouteType) => {
             return (
               <Source
-                key={`${route.geojsonCoordinates[0][0]}${route.geojsonCoordinates[0][1]}`}
-                id={`${route.geojsonCoordinates[0][0]}${route.geojsonCoordinates[0][1]}`} 
+                key={`source-${route.id}`}
+                id={`source-${route.id}`} 
                 type="geojson" 
                 data={{
                   type: 'Feature',
@@ -87,9 +87,9 @@ const Map = ({ shipments, routes }: Props) => {
                 }}
               >
                 <Layer
-                  id={`${route.geojsonCoordinates[0][0]}${route.geojsonCoordinates[0][1]}`}
+                  id={`layer-${route.id}`}
                   type='line'
-                  source={`${route.geojsonCoordinates[0][0]}${route.geojsonCoordinates[0][1]}`}
+                  source={`source-${route.id}`}
                   layout={{
                     'line-join': 'round',
                     'line-cap': 'round'

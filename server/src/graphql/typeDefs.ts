@@ -14,12 +14,14 @@ const typeDefs = gql`
   }
 
   type Shipment {
+    id: String
     pickupLocation: [Float]
     dropoffLocation: [Float]
     description: String
   }
 
   type Route {
+    id: String
     type: String
     sequence: Int
     geojsonCoordinates: [[Float]]
