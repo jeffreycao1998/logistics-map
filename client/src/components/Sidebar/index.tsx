@@ -50,7 +50,7 @@ const Sidebar = ({ shipments, setShipments, setRoutes }: Props) => {
             <RouteDetails shipments={shipments}/>
           </Route>
           <Route path='/'>
-            <AddRoute setShipments={setShipments} setRoutes={setRoutes}/>
+            <AddRoute shipments={shipments} setShipments={setShipments} setRoutes={setRoutes}/>
           </Route>
         </Switch>
       </Container>

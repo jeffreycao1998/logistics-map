@@ -1,12 +1,12 @@
 // Queries
-import SAY_HI from './queries/sayHi';
+import GET_ROUTES from './queries/getRoutes';
 
 // Mutations
 import ADD_SHIPMENT from './mutations/addShipment';
 
 export {
   // Queries
-  SAY_HI,
+  GET_ROUTES,
 
   // Mutations
   ADD_SHIPMENT,

@@ -50,11 +50,12 @@ const CreateBtn = styled.div`
 `;
 
 type Props= {
+  shipments: Array<ShipmentType>
   setShipments: React.Dispatch<React.SetStateAction<Array<ShipmentType>>>
   setRoutes: React.Dispatch<React.SetStateAction<Array<RouteType>>>
 }
 
-const AddShipment = ({ setShipments, setRoutes }: Props) => {
+const AddShipment = ({ shipments, setShipments, setRoutes }: Props) => {
   const [pickupLng, pickupLngInput] = useInput({name: 'Longitude', type: 'text'});
   const [pickupLat, pickupLatInput] = useInput({name: 'Latitude', type: 'text'});
 
@@ -64,8 +65,6 @@ const AddShipment = ({ setShipments, setRoutes }: Props) => {
   const [description, descriptionInput] = useInput({name: 'Description', type: 'textarea'});
 
   const [addShipment] = useMutation(ADD_SHIPMENT);
-
-  const [counter, setCounter] = useState(0);
 
   const data = [
     {
@@ -92,12 +91,11 @@ const AddShipment = ({ setShipments, setRoutes }: Props) => {
       //   dropoffLocation: [Number(dropoffLng), Number(dropoffLat)],
       //   description
       // }
-      variables: data[counter]
+      variables: data[shipments.length]
     })
     .then(res => {
       setShipments([...res.data.addShipment.shipments]);
       setRoutes([...res.data.addShipment.routes]);
-      setCounter(prev => prev + 1);
     })
     .catch(err => {
       console.log(err);

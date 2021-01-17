@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { ShipmentType, RouteType } from './types';
-// import { useQuery } from '@apollo/client';
-// import { SAY_HI } from './graphql/gql';
+import { useQuery } from '@apollo/client';
+import { GET_ROUTES } from './graphql/gql';
 
 // components
 import Map from './components/Map';
@@ -17,6 +17,16 @@ const Container = styled.div`
 function App() {
   const [shipments, setShipments] = useState([] as Array<ShipmentType>)
   const [routes, setRoutes] = useState([] as Array<RouteType>)
+  
+  const { data } = useQuery(GET_ROUTES);
+
+  useEffect(() => {
+    if (data) {
+      const { shipments, routes } = data.getRoutes;
+      setShipments([...shipments]);
+      setRoutes([...routes]);
+    }
+  },[data]);
 
   return (
     <Container className="App">

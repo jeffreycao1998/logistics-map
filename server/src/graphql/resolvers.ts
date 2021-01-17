@@ -1,12 +1,12 @@
 // Queries
-import sayHi from './queries/sayHi';
+import getRoutes from './queries/getRoutes';
 
 // Mutations
 import addShipment from './mutations/addShipment';
 
 const resolvers = {
   Query: {
-    sayHi,
+    getRoutes,
   },
   Mutation: {
     addShipment,

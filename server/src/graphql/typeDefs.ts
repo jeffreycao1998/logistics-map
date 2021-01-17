@@ -2,7 +2,7 @@ import { gql } from 'apollo-server';
 
 const typeDefs = gql`
   type Query {
-    sayHi: Status
+    getRoutes: MapData
   }
 
   type Mutation {
