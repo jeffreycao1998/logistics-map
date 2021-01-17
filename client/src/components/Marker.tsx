@@ -10,8 +10,10 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  color: white;
+  /* color: white; */
+  color: black;
   font-weight: 600;
+  opacity: .5;
 `;
 
 type Props = {

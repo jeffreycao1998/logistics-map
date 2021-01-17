@@ -11,7 +11,6 @@ const server = new ApolloServer({
 
 export const shipments = [] as Array<ShipmentType>;
 
-
 server.listen().then(({ url }) => {
   console.log(`🚀  Server ready at ${url}`);
 });

@@ -3,8 +3,6 @@ import axios from 'axios';
 import { shipments } from '../../index';
 import { RouteType, ShipmentType } from '../../types';
 
-let lastLocation: Array<[number, number]> | null = null;
-
 const addShipment = async (_obj: {}, args: ShipmentType, _context: {}) => {
   const { pickupLocation, dropoffLocation, description } = args;
 
@@ -14,12 +12,12 @@ const addShipment = async (_obj: {}, args: ShipmentType, _context: {}) => {
     description
   });
 
+  let lastLocation: Array<[number, number]> | null = null;
   const routes = [] as Array<RouteType>;
 
   for (let shipment of shipments) {
     if (lastLocation !== null) {
-      const url = 'https://api.mapbox.com/optimized-trips/v1/mapbox' +
-        '/driving' +
+      const url = 'https://api.mapbox.com/optimized-trips/v1/mapbox' + '/driving' +
         `/${lastLocation[0]},${lastLocation[1]};${shipment.pickupLocation[0]},${shipment.pickupLocation[1]}` +
         '?source=first' + '&destination=last' + '&roundtrip=false' + '&geometries=geojson' + 
         `&access_token=${process.env.MAPBOX_ACCESS_KEY}`;
@@ -30,6 +28,7 @@ const addShipment = async (_obj: {}, args: ShipmentType, _context: {}) => {
 
         routes.push({
           type: 'pickup',
+          sequence: routes.length,
           geojsonCoordinates
         });
         lastLocation = geojsonCoordinates[geojsonCoordinates.length - 1];
@@ -37,8 +36,7 @@ const addShipment = async (_obj: {}, args: ShipmentType, _context: {}) => {
       .catch(err => console.log(err.message));
     }
 
-    const url = 'https://api.mapbox.com/optimized-trips/v1/mapbox' +
-      '/driving' +
+    const url = 'https://api.mapbox.com/optimized-trips/v1/mapbox' + '/driving' +
       `/${shipment.pickupLocation[0]},${shipment.pickupLocation[1]};${shipment.dropoffLocation[0]},${shipment.dropoffLocation[1]}` +
       '?source=first' + '&destination=last' + '&roundtrip=false' + '&geometries=geojson' +
       `&access_token=${process.env.MAPBOX_ACCESS_KEY}`;
@@ -49,6 +47,7 @@ const addShipment = async (_obj: {}, args: ShipmentType, _context: {}) => {
 
       routes.push({
         type: 'dropoff',
+        sequence: routes.length,
         geojsonCoordinates
       });
       lastLocation = geojsonCoordinates[geojsonCoordinates.length - 1];

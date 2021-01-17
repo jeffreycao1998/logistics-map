@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { RouteType, ShipmentType } from '../../types';
 import useInput from '../../hooks/useInput';
@@ -65,17 +65,39 @@ const AddShipment = ({ setShipments, setRoutes }: Props) => {
 
   const [addShipment] = useMutation(ADD_SHIPMENT);
 
+  const [counter, setCounter] = useState(0);
+
+  const data = [
+    {
+      pickupLocation: [-79.6248, 43.6777],
+      dropoffLocation: [-79.4521, 43.7254],
+      description: 'pearson to yorkdale'
+    },
+    {
+      pickupLocation: [-79.1815, 43.8207],
+      dropoffLocation: [-79.5395, 43.8430],
+      description: 'zoo to wonderland'
+    },
+    {
+      pickupLocation: [-79.3871, 43.6426],
+      dropoffLocation: [-79.6423, 43.5931],
+      description: 'cn-tower to square one'
+    },
+  ]
+
   const handleCreate = () => {
     addShipment({
-      variables: {
-        pickupLocation: [Number(pickupLng), Number(pickupLat)],
-        dropoffLocation: [Number(dropoffLng), Number(dropoffLat)],
-        description
-      }
+      // variables: {
+      //   pickupLocation: [Number(pickupLng), Number(pickupLat)],
+      //   dropoffLocation: [Number(dropoffLng), Number(dropoffLat)],
+      //   description
+      // }
+      variables: data[counter]
     })
     .then(res => {
       setShipments([...res.data.addShipment.shipments]);
       setRoutes([...res.data.addShipment.routes]);
+      setCounter(prev => prev + 1);
     })
     .catch(err => {
       console.log(err);

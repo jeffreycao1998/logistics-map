@@ -10,6 +10,7 @@ const ADD_SHIPMENT = gql`
       }
       routes {
         type
+        sequence
         geojsonCoordinates
       }
     }

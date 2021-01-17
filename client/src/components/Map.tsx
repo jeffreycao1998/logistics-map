@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { MAPBOX_ACCESS_TOKEN } from '../util/constants';
 import { ViewportType, ShipmentType, RouteType } from '../types';
+import shortid from 'shortid';
 
 // Components
 import ReactMapGL, { Marker, Source, Layer } from 'react-map-gl';
@@ -34,6 +35,10 @@ const Map = ({ shipments, routes }: Props) => {
     }
   },[shipments]);
 
+  useEffect(() => {
+    console.log(routes);
+  },[routes]);
+
   return (
     <Container>
       <ReactMapGL
@@ -47,15 +52,19 @@ const Map = ({ shipments, routes }: Props) => {
         mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN}
       >
         {
-          routes.length > 0 && routes.map((route: RouteType, index: number) => {
+          routes.length > 0 && routes.map(({geojsonCoordinates, sequence}: RouteType, index: number) => {
+            const lastIndex = geojsonCoordinates.length - 1;
             return (
               <>
-                <Marker longitude={ route.geojsonCoordinates[0][0] } latitude={ route.geojsonCoordinates[0][1] }>
-                  <StyledMarker position={ index }/>
+                <Marker key={index + geojsonCoordinates[0][0]} draggable={true} longitude={ geojsonCoordinates[0][0] } latitude={ geojsonCoordinates[0][1] }>
+                  <StyledMarker position={ index + 1 }/>
                 </Marker>
-                <Marker longitude={ route.geojsonCoordinates[route.geojsonCoordinates.length - 1][0] } latitude={ route.geojsonCoordinates[route.geojsonCoordinates.length - 1][1] }>
-                  <StyledMarker position={ index }/>
-                </Marker>
+                {
+                  index === routes.length - 1 &&
+                  <Marker key={index + geojsonCoordinates[lastIndex][0]} longitude={ geojsonCoordinates[lastIndex][0] } latitude={ geojsonCoordinates[lastIndex][1] }>
+                    <StyledMarker position={ index + 2 }/>
+                  </Marker>
+                }
               </>
             )
           })

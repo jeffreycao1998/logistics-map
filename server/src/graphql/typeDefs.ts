@@ -21,6 +21,7 @@ const typeDefs = gql`
 
   type Route {
     type: String
+    sequence: Int
     geojsonCoordinates: [[Float]]
   }
 
