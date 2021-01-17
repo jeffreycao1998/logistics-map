@@ -7,6 +7,7 @@ const typeDefs = gql`
 
   type Mutation {
     createShipment(pickupLocation: [Float]!, dropoffLocation: [Float]!, description: String!): MapData
+    deleteShipment(shipmentId: String!): MapData
   }
 
   type Status {

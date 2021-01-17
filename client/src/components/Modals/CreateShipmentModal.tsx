@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import useInput from '../../hooks/useInput';
 import { RouteType, ShipmentType } from '../../types';
-import { ADD_SHIPMENT } from '../../graphql/gql';
+import { CREATE_SHIPMENT, DELETE_SHIPMENT } from '../../graphql/gql';
 import { useMutation } from '@apollo/client';
 
 const Container = styled.div`
@@ -115,7 +115,7 @@ const CreateShipmentModal = ({ setShowModal, shipments, setShipments, setRoutes 
 
   const [message, setMessage] = useState('');
 
-  const [createShipment] = useMutation(ADD_SHIPMENT);
+  const [createShipment] = useMutation(CREATE_SHIPMENT);
 
   const data = [
     {
@@ -145,8 +145,10 @@ const CreateShipmentModal = ({ setShowModal, shipments, setShipments, setRoutes 
       variables: data[shipments.length]
     })
     .then(res => {
-      setShipments([...res.data.createShipment.shipments]);
-      setRoutes([...res.data.createShipment.routes]);
+      const { shipments, routes } = res.data.createShipment;
+      setShipments([...shipments]);
+      setRoutes([...routes]);
+      setShowModal(false);
     })
     .catch(err => {
       setMessage(err.message);

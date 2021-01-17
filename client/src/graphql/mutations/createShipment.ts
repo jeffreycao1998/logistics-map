@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client"
   
-const ADD_SHIPMENT = gql`
+const CREATE_SHIPMENT = gql`
   mutation createShipment($pickupLocation: [Float]!, $dropoffLocation: [Float]!, $description: String!) {
     createShipment(pickupLocation: $pickupLocation, dropoffLocation: $dropoffLocation, description: $description) {
       shipments {
@@ -19,4 +19,4 @@ const ADD_SHIPMENT = gql`
   }
 `
 
-export default ADD_SHIPMENT;
+export default CREATE_SHIPMENT;

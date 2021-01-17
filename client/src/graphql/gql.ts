@@ -2,12 +2,14 @@
 import GET_ROUTES from './queries/getRoutes';
 
 // Mutations
-import ADD_SHIPMENT from './mutations/createShipment';
+import CREATE_SHIPMENT from './mutations/createShipment';
+import DELETE_SHIPMENT from './mutations/deleteShipment';
 
 export {
   // Queries
   GET_ROUTES,
 
   // Mutations
-  ADD_SHIPMENT,
+  CREATE_SHIPMENT,
+  DELETE_SHIPMENT,
 }
