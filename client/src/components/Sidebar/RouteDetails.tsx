@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { ShipmentType } from '../../types';
+import { RouteType, ShipmentType } from '../../types';
 
 // Components
 import EditModal from '../Modals/EditModal';
+import CreateModal from '../Modals/CreateModal';
 
 const Container = styled.div`
   width: 100%;
@@ -78,10 +79,13 @@ const ActionBtn = styled.div`
 
 type Props = {
   shipments: Array<ShipmentType>
+  setShipments: React.Dispatch<React.SetStateAction<Array<ShipmentType>>>
+  setRoutes: React.Dispatch<React.SetStateAction<Array<RouteType>>>
 }
 
-const RouteDetails = ({ shipments }: Props) => {
-  const [showEditModal, setShowEditModal] = useState(true);
+const RouteDetails = ({ shipments, setShipments, setRoutes }: Props) => {
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   return (
     <Container>
@@ -107,8 +111,8 @@ const RouteDetails = ({ shipments }: Props) => {
                 <p>{ description }</p>
               </div>
               <div className='actions'>
-                <ActionBtn color={'blue'} onClick={() => setShowEditModal(true)}>Edit</ActionBtn>
-                <ActionBtn color={'red'}>Delete</ActionBtn>
+                <ActionBtn color='blue' onClick={() => setShowEditModal(true)}>Edit</ActionBtn>
+                <ActionBtn color='red' onClick={() => setShowCreateModal(true)}>Delete</ActionBtn>
               </div>
 
               {
@@ -121,6 +125,15 @@ const RouteDetails = ({ shipments }: Props) => {
                   initDropoffLng={dropoffLocation[0].toString()}
                   initDropoffLat={dropoffLocation[1].toString()}
                   initDescription={description}
+                />
+              }
+              {
+                showCreateModal &&
+                <CreateModal
+                  setShowModal={setShowCreateModal}
+                  shipments={shipments}
+                  setShipments={setShipments}
+                  setRoutes={setRoutes}
                 />
               }
             </WaypointContainer>
