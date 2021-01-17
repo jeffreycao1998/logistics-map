@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import { ShipmentType, RouteType } from '../types';
 
 // components
-import EditModal from './Modals/EditModal';
-import CreateModal from './Modals/CreateModal';
+import EditShipmentModal from './Modals/EditShipmentModal';
+import CreateShipmentModal from './Modals/CreateShipmentModal';
 
 const Container = styled.div`
   width: 400px;
@@ -161,10 +161,9 @@ const Sidebar = ({ shipments, setShipments, setRoutes }: Props) => {
                     Delete
                   </ActionBtn>
                 </div>
-
                 {
                   showEditModal &&
-                  <EditModal
+                  <EditShipmentModal
                     shipmentId={id}
                     setShowModal={setShowEditModal}
                     initPickupLng={pickupLocation[0].toString()}
@@ -174,18 +173,18 @@ const Sidebar = ({ shipments, setShipments, setRoutes }: Props) => {
                     initDescription={description}
                   />
                 }
-                {
-                  showCreateModal &&
-                  <CreateModal
-                    setShowModal={setShowCreateModal}
-                    shipments={shipments}
-                    setShipments={setShipments}
-                    setRoutes={setRoutes}
-                  />
-                }
               </WaypointContainer>
             )
           })
+        }
+        {
+          showCreateModal &&
+          <CreateShipmentModal
+            setShowModal={setShowCreateModal}
+            shipments={shipments}
+            setShipments={setShipments}
+            setRoutes={setRoutes}
+          />
         }
       </ContentContainer>
     </Container>

@@ -4,7 +4,7 @@ import { shipments } from '../../index';
 import { ShipmentType } from '../../types';
 import calcOptimalRoute from '../../util/calcOptimalRoute';
 
-const addShipment = async (_obj: {}, args: ShipmentType, _context: {}) => {
+const createShipment = async (_obj: {}, args: ShipmentType, _context: {}) => {
   const { pickupLocation, dropoffLocation, description } = args;
 
   const identicalRoute = shipments.filter((shipment: ShipmentType) => {
@@ -33,4 +33,4 @@ const addShipment = async (_obj: {}, args: ShipmentType, _context: {}) => {
   };
 };
 
-export default addShipment;
+export default createShipment;

@@ -2,14 +2,14 @@
 import getRoutes from './queries/getRoutes';
 
 // Mutations
-import addShipment from './mutations/addShipment';
+import createShipment from './mutations/createShipment';
 
 const resolvers = {
   Query: {
     getRoutes,
   },
   Mutation: {
-    addShipment,
+    createShipment,
   }
 }
 

@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import useInput from '../../hooks/useInput';
+import { RouteType, ShipmentType } from '../../types';
+import { ADD_SHIPMENT } from '../../graphql/gql';
+import { useMutation } from '@apollo/client';
 
 const Container = styled.div`
   width: 100vw;
@@ -68,7 +71,7 @@ const Section = styled.div`
   }
 `;
 
-const UpdateBtn = styled.div`
+const CreateBtn = styled.div`
   margin: 32px 32px 16px 32px;
   width: 336x;
   text-align: center;
@@ -95,39 +98,64 @@ const Message = styled.p`
 `;
 
 type Props = {
-  shipmentId: string
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>
-  initPickupLng: string
-  initPickupLat: string
-  initDropoffLng: string
-  initDropoffLat: string
-  initDescription: string
+  shipments: Array<ShipmentType>
+  setShipments: React.Dispatch<React.SetStateAction<Array<ShipmentType>>>
+  setRoutes: React.Dispatch<React.SetStateAction<Array<RouteType>>>
 }
 
-const EditModal = ({ shipmentId, setShowModal, initPickupLng, initPickupLat, initDropoffLng, initDropoffLat, initDescription }: Props) => {
-  const [pickupLng, pickupLngInput] = useInput({name: 'Longitude', type: 'text', initialValue: initPickupLng});
-  const [pickupLat, pickupLatInput] = useInput({name: 'Latitude', type: 'text', initialValue: initPickupLat});
+const CreateShipmentModal = ({ setShowModal, shipments, setShipments, setRoutes }: Props) => {
+  const [pickupLng, pickupLngInput] = useInput({name: 'Longitude', type: 'text'});
+  const [pickupLat, pickupLatInput] = useInput({name: 'Latitude', type: 'text'});
 
-  const [dropoffLng, dropoffLngInput] = useInput({name: 'Longitude', type: 'text', initialValue: initDropoffLng});
-  const [dropoffLat, dropoffLatInput] = useInput({name: 'Latitude', type: 'text', initialValue: initDropoffLat});
+  const [dropoffLng, dropoffLngInput] = useInput({name: 'Longitude', type: 'text'});
+  const [dropoffLat, dropoffLatInput] = useInput({name: 'Latitude', type: 'text'});
 
-  const [description, descriptionInput] = useInput({name: 'Description', type: 'textarea', initialValue: initDescription});
+  const [description, descriptionInput] = useInput({name: 'Description', type: 'textarea'});
 
   const [message, setMessage] = useState('');
 
-  const handleUpdate = () => {
-    console.log({
-      pickupLng,
-      pickupLat,
-      dropoffLng,
-      dropoffLat,
-      description
-    });
+  const [createShipment] = useMutation(ADD_SHIPMENT);
+
+  const data = [
+    {
+      pickupLocation: [-79.6248, 43.6777],
+      dropoffLocation: [-79.4521, 43.7254],
+      description: 'pearson to yorkdale'
+    },
+    {
+      pickupLocation: [-79.1815, 43.8207],
+      dropoffLocation: [-79.5395, 43.8430],
+      description: 'zoo to wonderland'
+    },
+    {
+      pickupLocation: [-79.3871, 43.6426],
+      dropoffLocation: [-79.6423, 43.5931],
+      description: 'cn-tower to square one'
+    },
+  ]
+
+  const handleCreate = () => {
+    createShipment({
+      // variables: {
+      //   pickupLocation: [Number(pickupLng), Number(pickupLat)],
+      //   dropoffLocation: [Number(dropoffLng), Number(dropoffLat)],
+      //   description
+      // }
+      variables: data[shipments.length]
+    })
+    .then(res => {
+      setShipments([...res.data.createShipment.shipments]);
+      setRoutes([...res.data.createShipment.routes]);
+    })
+    .catch(err => {
+      setMessage(err.message);
+    })
   };
 
   useEffect(() => {
     setMessage('');
-  },[pickupLng, pickupLat, dropoffLng, dropoffLat, description])
+  },[pickupLng, pickupLat, dropoffLng, dropoffLat, description]);
   
   return (
     <Container>
@@ -138,8 +166,8 @@ const EditModal = ({ shipmentId, setShowModal, initPickupLng, initPickupLat, ini
           <ion-icon name="close"></ion-icon>
         </CloseContainer>
 
-        <Content>
-          <h4>Edit shipment - {shipmentId.slice(9)}</h4>
+        <Content key={'create'}>
+          <h4>Create shipment</h4>
 
           <Section>
             <h3 className='title'>Pickup</h3>
@@ -162,13 +190,14 @@ const EditModal = ({ shipmentId, setShowModal, initPickupLng, initPickupLat, ini
             { descriptionInput }
           </Section>
 
-          <UpdateBtn onClick={handleUpdate}>UPDATE</UpdateBtn>
+          <CreateBtn onClick={handleCreate}>CREATE</CreateBtn>
 
           <Message>{ message }</Message>
         </Content>
+
       </ContentContainer>
     </Container>
   );
 };
 
-export default EditModal;
+export default CreateShipmentModal;
