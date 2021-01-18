@@ -16,7 +16,6 @@ const fetchGeoJson = async (url: string, routes: Array<RouteType>, lastLocation:
 
     // @ts-ignore
     shipment[`${type}Location`][2] = routes.length;
-    console.log(shipment);
 
     routes.push(newRoute);
 

@@ -1,6 +1,7 @@
 require('dotenv');
 import { shipments } from '../../index';
 import { ShipmentType } from '../../types';
+import checkDuplicateShipment from '../../util/checkDuplicateShipment';
 import calcOptimalRoute from '../../util/calcOptimalRoute';
 
 interface Args extends ShipmentType {
@@ -13,6 +14,12 @@ const editShipment = async (_obj: {}, args: Args, _context: {}) => {
   const selectedShipment = shipments.filter((shipment: ShipmentType) => {
     return shipment.id === shipmentId;
   })[0];
+  
+  const identicalRoute = checkDuplicateShipment(shipments, args);
+
+  if (identicalRoute) {
+    throw new Error('This route already exists on the map.')
+  }
 
   // update shipment with new data
   selectedShipment.pickupLocation = pickupLocation;
