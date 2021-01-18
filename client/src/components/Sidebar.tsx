@@ -41,12 +41,15 @@ const WaypointContainer = styled.div`
     margin: 8px 0;
   }
 
-  .info {
+  .bottom-spacing {
     margin-bottom: 24px;
+  }
 
+  .info {
     .header {
       display: flex;
       align-items: center;
+      position: relative;
 
       .title {
         margin-right: 8px;
@@ -64,10 +67,19 @@ const WaypointContainer = styled.div`
     }
   }
 
-  .actions {
-    display: flex;
-    justify-content: space-between;
+  &:hover {
+    .actions {
+      display: flex;
+    }
   }
+`;
+
+const Actions = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  display: none;
 `;
 
 type ActionBtnProps = {
@@ -83,6 +95,7 @@ const ActionBtn = styled.div`
   align-items: center;
   font-size: 14px;
   user-select: none;
+  margin-left: 8px;
   cursor: pointer;
 
   ${({color}: ActionBtnProps) => {
@@ -105,7 +118,6 @@ const ActionBtn = styled.div`
 
   ion-icon {
     color: white;
-    margin-right: 4px;
   }
 `;
 
@@ -135,14 +147,30 @@ const Sidebar = ({ shipments, setShipments, setRoutes }: Props) => {
           shipments.length > 0 && shipments.map(({ id, pickupLocation, dropoffLocation, description }: ShipmentType) => {
             return (
               <WaypointContainer key={id}>
-                <div className='info pickup'>
+                <div className='info pickup bottom-spacing'>
                   <div className='header'>
                     <h4 className='title'>Pickup</h4>
                     <h4 className='indicator'>{`${pickupLocation[2] === undefined ? 1 : pickupLocation[2] + 2}`}</h4>
+                    <Actions className='actions'>
+                      <ActionBtn color='red' onClick={() => {
+                          setShowDeleteModal(true)
+                          setSelectedId(id);
+                        }}>
+                        {/* @ts-ignore */}
+                        <ion-icon name="trash-outline"></ion-icon>
+                      </ActionBtn>
+                      <ActionBtn color='blue' onClick={() => {
+                          setShowEditModal(true)
+                          setSelectedId(id);
+                        }}>
+                        {/* @ts-ignore */}
+                        <ion-icon name="create-outline"></ion-icon>
+                      </ActionBtn>
+                    </Actions>
                   </div>
                   <p>{`[${ pickupLocation[0] }, ${ pickupLocation[1] }]`}</p>
                 </div>
-                <div className='info dropoff'>
+                <div className='info dropoff bottom-spacing'>
                   <div className='header'>
                     <h4 className='title'>Dropoff</h4>
                     <h4 className='indicator'>{`${dropoffLocation[2] === undefined ? 1 : dropoffLocation[2] + 2}`}</h4>                </div>
@@ -151,22 +179,6 @@ const Sidebar = ({ shipments, setShipments, setRoutes }: Props) => {
                 <div className='info description'>
                   <h4 className='title'>Description</h4>
                   <p>{ description }</p>
-                </div>
-                <div className='actions'>
-                  <ActionBtn color='blue' onClick={() => {
-                      setShowEditModal(true)
-                      setSelectedId(id);
-                    }}>
-                    {/* @ts-ignore */}
-                    <ion-icon name="create-outline"></ion-icon> Edit
-                  </ActionBtn>
-                  <ActionBtn color='red' onClick={() => {
-                      setShowDeleteModal(true)
-                      setSelectedId(id);
-                    }}>
-                    {/* @ts-ignore */}
-                    <ion-icon name="trash-outline"></ion-icon> Delete
-                  </ActionBtn>
                 </div>
                 {
                   showEditModal &&
