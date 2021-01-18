@@ -131,7 +131,7 @@ const EditShipmentModal = ({
   const [message, setMessage] = useState('');
 
   const [editShipment] = useMutation(EDIT_SHIPMENT);
-
+  
   const handleUpdate = () => {
     editShipment({ 
       variables: {

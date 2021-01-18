@@ -41,8 +41,8 @@ type Props = {
 }
 
 const useInput = ({ name, type, placeholder, initialValue }: Props) => {
-  const [value, setValue] = useState(initialValue ? initialValue : '');
-
+  const [value, setValue] = useState(initialValue);
+  
   const randomId = shortid.generate();
 
   const input = (

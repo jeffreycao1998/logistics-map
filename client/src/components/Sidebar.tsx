@@ -132,6 +132,25 @@ const Sidebar = ({ shipments, setShipments, setRoutes }: Props) => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const [selectedShipmentId, setSelectedShipmentId] = useState('');
+  const [selectedPickupLocation, setSelectedPickupLocation] = useState([] as Array<number>);
+  const [selectedDropoffLocation, setSelectedDropoffLocation] = useState([] as Array<number>);
+  const [selectedDescription, setSelectedDescription] = useState('');
+
+  const setSelectedShipment = (shipmentId: string, pickupLocation: Array<number>, dropoffLocation: Array<number>, description: string) => {
+    setSelectedShipmentId(shipmentId);
+    setSelectedPickupLocation([...pickupLocation]);
+    setSelectedDropoffLocation([...dropoffLocation]);
+    setSelectedDescription(description);
+  };
+
+  // const resetSelectedShipment = () => {
+  //   setSelectedShipmentId('');
+  //   setSelectedPickupLocation([] as Array<number>);
+  //   setSelectedDropoffLocation([] as Array<number>);
+  //   setSelectedDescription('');
+  // };
   
   return (
     <Container>
@@ -154,14 +173,14 @@ const Sidebar = ({ shipments, setShipments, setRoutes }: Props) => {
                     <Actions className='actions'>
                       <ActionBtn color='red' onClick={() => {
                           setShowDeleteModal(true)
-                          setSelectedId(id);
+                          setSelectedShipment(id, pickupLocation, dropoffLocation, description);
                         }}>
                         {/* @ts-ignore */}
                         <ion-icon name="trash-outline"></ion-icon>
                       </ActionBtn>
                       <ActionBtn color='blue' onClick={() => {
-                          setShowEditModal(true)
-                          setSelectedId(id);
+                          setShowEditModal(true);
+                          setSelectedShipment(id, pickupLocation, dropoffLocation, description);
                         }}>
                         {/* @ts-ignore */}
                         <ion-icon name="create-outline"></ion-icon>
@@ -180,35 +199,6 @@ const Sidebar = ({ shipments, setShipments, setRoutes }: Props) => {
                   <h4 className='title'>Description</h4>
                   <p>{ description }</p>
                 </div>
-                {
-                  showEditModal &&
-                  <EditShipmentModal
-                    key={id}
-                    shipmentId={selectedId}
-                    setShowModal={setShowEditModal}
-                    initPickupLng={pickupLocation[0].toString()}
-                    initPickupLat={pickupLocation[1].toString()}
-                    initDropoffLng={dropoffLocation[0].toString()}
-                    initDropoffLat={dropoffLocation[1].toString()}
-                    initDescription={description}
-                    setShipments={setShipments}
-                    setRoutes={setRoutes}
-                  />
-                }
-                {
-                  showDeleteModal &&
-                  <DeleteShipmentModal
-                    shipmentId={selectedId}
-                    setShowModal={setShowDeleteModal}
-                    initPickupLng={pickupLocation[0].toString()}
-                    initPickupLat={pickupLocation[1].toString()}
-                    initDropoffLng={dropoffLocation[0].toString()}
-                    initDropoffLat={dropoffLocation[1].toString()}
-                    initDescription={description}
-                    setShipments={setShipments}
-                    setRoutes={setRoutes}
-                  />
-                }
               </WaypointContainer>
             )
           })
@@ -218,6 +208,34 @@ const Sidebar = ({ shipments, setShipments, setRoutes }: Props) => {
           <CreateShipmentModal
             setShowModal={setShowCreateModal}
             shipments={shipments}
+            setShipments={setShipments}
+            setRoutes={setRoutes}
+          />
+        }
+        {
+          showEditModal &&
+          <EditShipmentModal
+            shipmentId={selectedId}
+            setShowModal={setShowEditModal}
+            initPickupLng={selectedPickupLocation[0].toString()}
+            initPickupLat={selectedPickupLocation[1].toString()}
+            initDropoffLng={selectedDropoffLocation[0].toString()}
+            initDropoffLat={selectedDropoffLocation[1].toString()}
+            initDescription={selectedDescription}
+            setShipments={setShipments}
+            setRoutes={setRoutes}
+          />
+        }
+        {
+          showDeleteModal &&
+          <DeleteShipmentModal
+            shipmentId={selectedId}
+            setShowModal={setShowDeleteModal}
+            initPickupLng={selectedPickupLocation[0].toString()}
+            initPickupLat={selectedPickupLocation[1].toString()}
+            initDropoffLng={selectedDropoffLocation[0].toString()}
+            initDropoffLat={selectedDropoffLocation[1].toString()}
+            initDescription={selectedDescription}
             setShipments={setShipments}
             setRoutes={setRoutes}
           />
