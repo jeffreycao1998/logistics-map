@@ -1,7 +1,7 @@
 export type ShipmentType = {
   id: string
-  pickupLocation: [number, number, number]
-  dropoffLocation: [number, number, number]
+  pickupLocation: Array<number>
+  dropoffLocation: Array<number>
   description: string
 }
 

@@ -1,8 +1,8 @@
 import axios from 'axios';
 import shortid from 'shortid';
-import { RouteType } from '../types';
+import { RouteType, ShipmentType } from '../types';
 
-const fetchGeoJson = async (url: string, routes: Array<RouteType>, lastLocation: Array<number>, type: 'pickup' | 'dropoff') => {
+const fetchGeoJson = async (url: string, routes: Array<RouteType>, lastLocation: Array<number>, type: 'pickup' | 'dropoff', shipment: ShipmentType) => {
   await axios.get(url)
   .then(res => {
     const geojsonCoordinates = res.data.trips[0].geometry.coordinates;
@@ -13,6 +13,11 @@ const fetchGeoJson = async (url: string, routes: Array<RouteType>, lastLocation:
       sequence: routes.length,
       geojsonCoordinates
     };
+
+    // @ts-ignore
+    shipment[`${type}Location`][2] = routes.length;
+    console.log(shipment);
+
     routes.push(newRoute);
 
     // set the longitude/latitude of the last location you were at

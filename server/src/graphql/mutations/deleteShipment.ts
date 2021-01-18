@@ -17,7 +17,13 @@ const deleteShipment = async (_obj: {}, args: Args, _context: {}) => {
   const removeIndex = shipments.indexOf(removeShipment);
   shipments.splice(removeIndex, 1);
 
-  const routes = calcOptimalRoute(shipments);
+  // reset sequence
+  shipments.forEach((shipment: ShipmentType) => {
+    shipment.pickupLocation.splice(2, 1);
+    shipment.dropoffLocation.splice(2, 1);
+  });
+
+  const routes = await calcOptimalRoute(shipments);
 
   return {
     shipments,
