@@ -4,6 +4,7 @@ import getRoutes from './queries/getRoutes';
 // Mutations
 import createShipment from './mutations/createShipment';
 import deleteShipment from './mutations/deleteShipment';
+import editShipment from './mutations/editShipment';
 
 const resolvers = {
   Query: {
@@ -12,6 +13,7 @@ const resolvers = {
   Mutation: {
     createShipment,
     deleteShipment,
+    editShipment,
   }
 }
 

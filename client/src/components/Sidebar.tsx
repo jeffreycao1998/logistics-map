@@ -171,6 +171,7 @@ const Sidebar = ({ shipments, setShipments, setRoutes }: Props) => {
                 {
                   showEditModal &&
                   <EditShipmentModal
+                    key={id}
                     shipmentId={selectedId}
                     setShowModal={setShowEditModal}
                     initPickupLng={pickupLocation[0].toString()}
@@ -178,6 +179,8 @@ const Sidebar = ({ shipments, setShipments, setRoutes }: Props) => {
                     initDropoffLng={dropoffLocation[0].toString()}
                     initDropoffLat={dropoffLocation[1].toString()}
                     initDescription={description}
+                    setShipments={setShipments}
+                    setRoutes={setRoutes}
                   />
                 }
                 {

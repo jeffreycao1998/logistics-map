@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import useInput from '../../hooks/useInput';
 import { useMutation } from '@apollo/client';
 import { DELETE_SHIPMENT } from '../../graphql/gql';
 import { RouteType, ShipmentType } from '../../types';

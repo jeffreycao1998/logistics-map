@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import useInput from '../../hooks/useInput';
+import { useMutation } from '@apollo/client';
+import { EDIT_SHIPMENT } from '../../graphql/gql';
+import { RouteType, ShipmentType } from '../../types';
 
 const Container = styled.div`
   width: 100vw;
@@ -102,9 +105,21 @@ type Props = {
   initDropoffLng: string
   initDropoffLat: string
   initDescription: string
+  setShipments: React.Dispatch<React.SetStateAction<Array<ShipmentType>>>
+  setRoutes: React.Dispatch<React.SetStateAction<Array<RouteType>>>
 }
 
-const EditShipmentModal = ({ shipmentId, setShowModal, initPickupLng, initPickupLat, initDropoffLng, initDropoffLat, initDescription }: Props) => {
+const EditShipmentModal = ({ 
+  shipmentId,
+  setShowModal,
+  initPickupLng,
+  initPickupLat,
+  initDropoffLng,
+  initDropoffLat,
+  initDescription,
+  setShipments,
+  setRoutes,
+}: Props) => {
   const [pickupLng, pickupLngInput] = useInput({name: 'Longitude', type: 'text', initialValue: initPickupLng});
   const [pickupLat, pickupLatInput] = useInput({name: 'Latitude', type: 'text', initialValue: initPickupLat});
 
@@ -115,13 +130,25 @@ const EditShipmentModal = ({ shipmentId, setShowModal, initPickupLng, initPickup
 
   const [message, setMessage] = useState('');
 
+  const [editShipment] = useMutation(EDIT_SHIPMENT);
+
   const handleUpdate = () => {
-    console.log({
-      pickupLng,
-      pickupLat,
-      dropoffLng,
-      dropoffLat,
-      description
+    editShipment({ 
+      variables: {
+        pickupLocation: [Number(pickupLng), Number(pickupLat)],
+        dropoffLocation: [Number(dropoffLng), Number(dropoffLat)],
+        description,
+        shipmentId
+      }
+    })
+    .then(res => {
+      const { shipments, routes } = res.data.editShipment;
+      setShipments([...shipments]);
+      setRoutes([...routes]);
+      setShowModal(false);
+    })
+    .catch(err => {
+      setMessage(err.message);
     });
   };
 

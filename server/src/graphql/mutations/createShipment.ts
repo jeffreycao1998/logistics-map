@@ -1,4 +1,3 @@
-require('dotenv').config();
 import shortid from 'shortid';
 import { shipments } from '../../index';
 import { ShipmentType } from '../../types';
@@ -26,7 +25,7 @@ const createShipment = async (_obj: {}, args: ShipmentType, _context: {}) => {
   });
 
   const routes = await calcOptimalRoute(shipments);
-
+  
   return {
     shipments,
     routes,

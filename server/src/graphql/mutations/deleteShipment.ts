@@ -1,4 +1,3 @@
-require('dotenv').config();
 import { shipments } from '../../index';
 import { ShipmentType } from '../../types';
 import calcOptimalRoute from '../../util/calcOptimalRoute';
