@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import useInput from '../../hooks/useInput';
 import { RouteType, ShipmentType } from '../../types';
-import { CREATE_SHIPMENT, DELETE_SHIPMENT } from '../../graphql/gql';
+import { CREATE_SHIPMENT } from '../../graphql/gql';
 import { useMutation } from '@apollo/client';
 
 const Container = styled.div`
@@ -83,12 +83,11 @@ const CreateBtn = styled.div`
   letter-spacing: 1px;
   border-radius: 4px;
   user-select: none;
+  cursor: pointer;
 
   :hover {
     background-color: #017001;
   }
-
-  cursor: pointer;
 `;
 
 const Message = styled.p`

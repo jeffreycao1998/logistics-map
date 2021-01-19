@@ -14,6 +14,39 @@ const Container = styled.div`
   height: 100vh;
 `;
 
+const LegendContainer = styled.div`
+  position: absolute;
+  bottom: 32px;
+  right: 24px;
+  background-color: darkgray;
+  border-radius: 12px;
+  padding: 16px 24px;
+  > :not(:last-child) {
+    margin-bottom: 12px;
+  }
+`;
+
+type LegendItemProps = {
+  color: string
+}
+const LegendItem = styled.div`
+  display: flex;
+  align-items: center;
+
+  .color-square {
+    background-color: ${({color}: LegendItemProps) => color};
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+    border-radius: 2px;
+    border: 1px solid grey;
+  }
+
+  p {
+    font-size: 16px;
+  }
+`;
+
 type Props = {
   shipments: Array<ShipmentType>
   routes: Array<RouteType>
@@ -38,6 +71,19 @@ const Map = ({ shipments, routes }: Props) => {
     }
   },[shipments]);
 
+  const getRouteColor = (type: 'pickup' | 'dropoff' | 'recall') => {
+    switch(type) {
+      case 'pickup':
+        return '#fae902';
+      case 'dropoff':
+        return '#029ffa';
+      case 'recall':
+        return '#b03bc0';
+      default:
+        return 'lightgrey';
+    }
+  };
+
   return (
     <Container>
       <ReactMapGL
@@ -54,20 +100,11 @@ const Map = ({ shipments, routes }: Props) => {
         mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN}
       >
         {
-          routes.length > 0 && routes.map(({id, geojsonCoordinates, sequence}: RouteType, index: number) => {
-            const lastIndex = geojsonCoordinates.length - 1;
+          routes.length > 0 && routes.map(({id, geojsonCoordinates, sequence}: RouteType) => {
             return (
-              <div key={id}>
-                <Marker key={id + 'first'} draggable={true} longitude={ geojsonCoordinates[0][0] } latitude={ geojsonCoordinates[0][1] }>
-                  <StyledMarker position={ sequence + 1 }/>
-                </Marker>
-                {
-                  index === routes.length - 1 &&
-                  <Marker key={id + 'second'} longitude={ geojsonCoordinates[lastIndex][0] } latitude={ geojsonCoordinates[lastIndex][1] }>
-                    <StyledMarker position={ sequence + 2 }/>
-                  </Marker>
-                }
-              </div>
+              <Marker key={id + 'first'}  draggable={true} longitude={ geojsonCoordinates[0][0] } latitude={ geojsonCoordinates[0][1] }>
+                <StyledMarker position={ sequence + 1 }/>
+              </Marker>
             )
           })
         }
@@ -97,7 +134,7 @@ const Map = ({ shipments, routes }: Props) => {
                     'line-cap': 'round'
                   }}
                   paint={{
-                    'line-color': `${route.type === 'pickup' ? '#fae902' : '#029ffa'}`,
+                    'line-color': getRouteColor(route.type),
                     'line-width': 6
                   }}
                 />
@@ -107,8 +144,32 @@ const Map = ({ shipments, routes }: Props) => {
         }
 
       </ReactMapGL>
+
+      <LegendContainer>
+        <LegendItem color='#fae902'>
+          <div className='color-square'></div>
+          <p>Pickup route</p>
+        </LegendItem>
+        <LegendItem color='#029ffa'>
+          <div className='color-square'></div>
+          <p>Dropoff route</p>
+        </LegendItem>
+        <LegendItem color='#b03bc0'>
+          <div className='color-square'></div>
+          <p>Back to start</p>
+        </LegendItem>
+      </LegendContainer>
     </Container>
   )
 };
+
+// case 'pickup':
+//   return '#fae902';
+// case 'dropoff':
+//   return '#029ffa';
+// case 'recall':
+//   return '#CCFFCC';
+// default:
+//   return 'lightgrey';
 
 export default Map;
