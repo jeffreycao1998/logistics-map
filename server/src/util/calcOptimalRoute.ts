@@ -20,6 +20,11 @@ const calcOptimalRoute = async (shipments: Array<ShipmentType>) => {
     await fetchGeoJson(url, routes, lastLocation, 'dropoff', shipment);
   }
 
+  // add route back to starting point
+  const waypoints = `${lastLocation[0]},${lastLocation[1]};${shipments[0].pickupLocation[0]},${shipments[0].pickupLocation[1]}`;
+  const url = `https://api.mapbox.com/optimized-trips/v1/mapbox/driving/${waypoints}?source=first&destination=last&roundtrip=false&geometries=geojson&access_token=${process.env.MAPBOX_ACCESS_KEY}`;
+  await fetchGeoJson(url, routes, lastLocation, 'recall');
+
   return routes;
 };
 

@@ -2,7 +2,7 @@ import axios from 'axios';
 import shortid from 'shortid';
 import { RouteType, ShipmentType } from '../types';
 
-const fetchGeoJson = async (url: string, routes: Array<RouteType>, lastLocation: Array<number>, type: 'pickup' | 'dropoff', shipment: ShipmentType) => {
+const fetchGeoJson = async (url: string, routes: Array<RouteType>, lastLocation: Array<number>, type: 'pickup' | 'dropoff' | 'recall', shipment?: ShipmentType) => {
   await axios.get(url)
   .then(res => {
     const geojsonCoordinates = res.data.trips[0].geometry.coordinates;
@@ -14,8 +14,10 @@ const fetchGeoJson = async (url: string, routes: Array<RouteType>, lastLocation:
       geojsonCoordinates
     };
 
-    // @ts-ignore
-    shipment[`${type}Location`][2] = routes.length;
+    if (shipment) {
+      // @ts-ignore
+      shipment[`${type}Location`][2] = routes.length;
+    }
 
     routes.push(newRoute);
 

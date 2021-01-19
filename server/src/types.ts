@@ -7,7 +7,7 @@ export type ShipmentType = {
 
 export type RouteType = {
   id: string
-  type: 'pickup' | 'dropoff'
+  type: 'pickup' | 'dropoff' | 'recall'
   sequence: number
   geojsonCoordinates: Array<[number, number]>
 }
