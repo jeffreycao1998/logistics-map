@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { ViewportType, ShipmentType, RouteType } from '../types';
-import { MAPBOX_ACCESS_TOKEN } from '../util/constants';
-// import calcMapCenter from '../util/calcMapCenter';
+import { MAPBOX_ACCESS_TOKEN } from '../util/constants'; 
 import calcViewport from '../util/calcViewport';
 
 // Components
@@ -102,7 +101,12 @@ const Map = ({ shipments, routes }: Props) => {
         {
           routes.length > 0 && routes.map(({id, geojsonCoordinates, sequence}: RouteType) => {
             return (
-              <Marker key={id + 'first'}  draggable={true} longitude={ geojsonCoordinates[0][0] } latitude={ geojsonCoordinates[0][1] }>
+              <Marker 
+                key={id} 
+                draggable={ true }
+                longitude={ geojsonCoordinates[0][0] }
+                latitude={ geojsonCoordinates[0][1] }
+              >
                 <StyledMarker position={ sequence + 1 }/>
               </Marker>
             )
@@ -162,14 +166,5 @@ const Map = ({ shipments, routes }: Props) => {
     </Container>
   )
 };
-
-// case 'pickup':
-//   return '#fae902';
-// case 'dropoff':
-//   return '#029ffa';
-// case 'recall':
-//   return '#CCFFCC';
-// default:
-//   return 'lightgrey';
 
 export default Map;
