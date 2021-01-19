@@ -38,16 +38,15 @@ const createMatrix = async (shipments: Array<ShipmentType>) => {
 
   for (let i = 0; i < waypoints.length; i++) {
     for (let j = 0; j < waypoints.length; j++) {
-      if (i === j) {
-        matrix[i][j] = 0;
-      }
       const urlWaypoints = `${waypoints[i].location[0]},${waypoints[i].location[1]};${waypoints[j].location[0]},${waypoints[j].location[1]}`;
       const url = `https://api.mapbox.com/optimized-trips/v1/mapbox/driving/${urlWaypoints}?source=first&destination=last&roundtrip=false&geometries=geojson&access_token=${process.env.MAPBOX_ACCESS_KEY}`;
       await axios.get(url)
       .then(res => {
-        console.log(res.data);
         matrix[i][j] = {
-
+          from: [...waypoints[i].location],
+          to: [...waypoints[j].location],
+          distance: res.data.trips[0].distance,
+          duration: res.data.trips[0].duration
         }
       })
       .catch(err => console.log(err));
