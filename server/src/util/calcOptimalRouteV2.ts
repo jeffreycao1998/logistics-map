@@ -485,21 +485,47 @@ const extractWaypoints = (shipments: Array<ShipmentType>) => {
 
 const getAllTotalDistances = async (shipments: Array<ShipmentType>) => {
   // const matrix = await createMatrix(shipments);
+  const startTime = (new Date).getTime();
   const waypoints = extractWaypoints(shipments);
   const indexesArray = initIndexArray(waypoints.length);
 
-  const allCombinations = getAllCombinations(indexesArray, 0, []);
+  const combinations = getAllCombinations(indexesArray, 0, []);
 
-  console.log(allCombinations);
-  // const distances = [] as Array<Array<number>>;
+  let shortestDistanceCombination = null;
+  let shortestDistance = Infinity;
 
-  // for (let i = 0; i < matrix.length; i++) {
-  //   for (let j = 0; j < matrix.length; j++) {
-  //     distances.push([i, j])
-  //   }
-  // }
-  console.log(matrix.length);
-  console.log(waypoints);
+  for (let combination of combinations) {
+    let lastIndex = null;
+    let totalDistance = 0;
+    combination.push(combination[0]);
+
+    // skip combination if combination doesn't start where we want it to start
+    const startingPoint = 0;
+    if (combination[0] !== startingPoint) {
+      continue;
+    }
+
+    for (let index of combination) {
+      if (lastIndex === null) {
+        lastIndex = index;
+        continue;
+      }
+
+      const distance = matrix[lastIndex][index].distance;
+      totalDistance += distance;
+      lastIndex = index;
+    }
+
+    if (totalDistance < shortestDistance) {
+      shortestDistanceCombination = combination;
+      shortestDistance = totalDistance;
+    }
+  }
+
+  console.log(shortestDistanceCombination);
+  console.log(shortestDistance);
+  const endTime = (new Date).getTime();
+  console.log(endTime - startTime);
 };
 
 getAllTotalDistances(shipments);
