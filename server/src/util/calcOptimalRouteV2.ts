@@ -11,7 +11,7 @@ import {
 } from '../types';
 // import fetchGeoJsonV2 from './fetchGeoJsonV2';
 // import util from 'util';
-import { initIndexArray, getAllCombinations } from './helpers';
+import { initIndexArray, swap } from './helpers';
 
 const extractWaypoints = (shipments: Array<ShipmentType>) => {
   const waypoints = [];
@@ -66,6 +66,20 @@ const extractWaypoints = (shipments: Array<ShipmentType>) => {
 
 //   return matrix;
 // };
+
+export const getAllCombinations = (indexes: Array<number>, currentIndex: number, combinations = [] as Array<Array<number>>) => {
+  if (currentIndex === indexes.length - 1) {
+    combinations.push([...indexes]);
+  }
+
+  for (let i = currentIndex; i < indexes.length; i++) {
+    swap(indexes, currentIndex, i);
+    getAllCombinations(indexes, currentIndex + 1, combinations);
+    swap(indexes, currentIndex, i);
+  }
+
+  return combinations;
+};
 
 const getAllTotalDistances = async (shipments: Array<ShipmentType>) => {
   // const matrix = await createMatrix(shipments);

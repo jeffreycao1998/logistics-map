@@ -14,20 +14,6 @@ export const initIndexArray = (num: number) => {
   return indexes;
 };
 
-export const getAllCombinations = (indexes: Array<number>, currentIndex: number, combinations = [] as Array<Array<number>>) => {
-  if (currentIndex === indexes.length - 1) {
-    combinations.push([...indexes]);
-  }
-
-  for (let i = currentIndex; i < indexes.length; i++) {
-    swap(indexes, currentIndex, i);
-    getAllCombinations(indexes, currentIndex + 1, combinations);
-    swap(indexes, currentIndex, i);
-  }
-
-  return combinations;
-};
-
 export const shuffle = (arr: Array<number>) => {
   var i = arr.length, j, temp;
   while(--i > 0){
