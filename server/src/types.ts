@@ -11,3 +11,9 @@ export type RouteType = {
   sequence: number
   geojsonCoordinates: Array<[number, number]>
 }
+
+export type CombinationType = {
+  order: Array<number>
+  distance: number
+  fitness: number
+}
