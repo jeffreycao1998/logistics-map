@@ -1,6 +1,6 @@
 import { shipments } from '../../index';
 import { ShipmentType } from '../../types';
-import calcOptimalRoute from '../../util/calcOptimalRoute';
+import calcOptimalRoute from '../../util/calcOptimalRouteV1';
 
 type Args = {
   shipmentId: string

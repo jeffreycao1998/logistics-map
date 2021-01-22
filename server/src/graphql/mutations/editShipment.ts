@@ -2,7 +2,7 @@ require('dotenv');
 import { shipments } from '../../index';
 import { ShipmentType } from '../../types';
 import checkDuplicateShipment from '../../util/checkDuplicateShipment';
-import calcOptimalRoute from '../../util/calcOptimalRoute';
+import calcOptimalRoute from '../../util/calcOptimalRouteV1';
 
 interface Args extends ShipmentType {
   shipmentId: string

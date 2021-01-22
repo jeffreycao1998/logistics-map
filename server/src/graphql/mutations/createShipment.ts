@@ -2,7 +2,7 @@ import shortid from 'shortid';
 import { shipments } from '../../index';
 import { ShipmentType } from '../../types';
 import checkDuplicateShipment from '../../util/checkDuplicateShipment';
-import calcOptimalRoute from '../../util/calcOptimalRoute';
+import calcOptimalRoute from '../../util/calcOptimalRouteV1';
 
 const createShipment = async (_obj: {}, args: ShipmentType, _context: {}) => {
   const { pickupLocation, dropoffLocation, description } = args;

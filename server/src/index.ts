@@ -4,6 +4,8 @@ import typeDefs from './graphql/typeDefs';
 import resolvers from './graphql/resolvers';
 import { ShipmentType } from './types';
 
+export const startTime = (new Date).getTime();
+
 const server = new ApolloServer({ 
   typeDefs,
   resolvers,
