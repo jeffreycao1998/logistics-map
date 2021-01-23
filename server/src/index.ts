@@ -18,30 +18,30 @@ export const shipments = [
     dropoffLocation: [ -79.5395, 43.843, 2 ],
     description: 'zoo to wonderland'
   },
-  // {
-  //   id: 'shipment-HYacQ879f',
-  //   pickupLocation: [ -79.3871, 43.6426, 3 ],
-  //   dropoffLocation: [ -79.6423, 43.5931, 4 ],
-  //   description: 'cn-tower to square one'
-  // },
-  // {
-  //   id: 'shipment-HYacQIOaO',
-  //   pickupLocation: [ -79.3197, 43.8124, 5 ],
-  //   dropoffLocation: [ -79.2795, 43.7887, 6 ],
-  //   description: 'dr norman bethuen to agincourt'
-  // },
-  // {
-  //   id: 'shipment-HYa532523',
-  //   pickupLocation: [ -79.3948, 43.6677, 7 ],
-  //   dropoffLocation: [ -79.3788, 43.6214, 8 ],
-  //   description: 'ROM to Toronto Island'
-  // },
-  // {
-  //   id: 'shipment-123123',
-  //   pickupLocation: [ -79.4094, 43.6780, 9 ],
-  //   dropoffLocation: [ -79.3925, 43.6536, 10 ],
-  //   description: 'Casa Loma to AGO'
-  // },
+  {
+    id: 'shipment-HYacQ879f',
+    pickupLocation: [ -79.3871, 43.6426, 3 ],
+    dropoffLocation: [ -79.6423, 43.5931, 4 ],
+    description: 'cn-tower to square one'
+  },
+  {
+    id: 'shipment-HYacQIOaO',
+    pickupLocation: [ -79.3197, 43.8124, 5 ],
+    dropoffLocation: [ -79.2795, 43.7887, 6 ],
+    description: 'dr norman bethuen to agincourt'
+  },
+  {
+    id: 'shipment-HYa532523',
+    pickupLocation: [ -79.3948, 43.6677, 7 ],
+    dropoffLocation: [ -79.3788, 43.6214, 8 ],
+    description: 'ROM to Toronto Island'
+  },
+  {
+    id: 'shipment-123123',
+    pickupLocation: [ -79.4094, 43.6780, 9 ],
+    dropoffLocation: [ -79.3925, 43.6536, 10 ],
+    description: 'Casa Loma to AGO'
+  },
   // {
   //   id: 'shipment-234234',
   //   pickupLocation: [ -79.3860, 43.6424, 11 ],

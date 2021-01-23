@@ -4,7 +4,7 @@
 
 // import axios from 'axios';
 import { shipments, startTime } from '../index';
-import matrix from './testMatrix2Shipments';
+import matrix from './testMatrix6Shipments';
 import { 
   ShipmentType,
   CombinationType,
@@ -15,6 +15,14 @@ import {
 import { initIndexArray, shuffle, swap } from './helpers';
 
 let highestFitness = 0;
+
+const answerDistance = 191526.1;
+let curDistance = Infinity;
+let totalCombinations = 0;
+
+const STARTING_POINT = 0; // starting point is the waypoint at index 0;
+const POPULATION_SIZE = 10;
+// const CYCLES = 120;
 
 const extractWaypoints = (shipments: Array<ShipmentType>) => {
   const waypoints = [];
@@ -35,15 +43,32 @@ const extractWaypoints = (shipments: Array<ShipmentType>) => {
   return waypoints;
 };
 
-const initPopulation = (index: Array<number>, populationSize: number, startingPoint: number) => {
+const isValidSequence = (indexes: Array<number>) => {
+  const set = new Set();
+  set.add(STARTING_POINT);
+
+  for (let i = 1; i < indexes.length; i++) {
+    // is a pickup location so just add it to the set
+    if (indexes[i] % 2 === 0) {
+      set.add(indexes[i]);
+
+    // is a dropoff location so check if it was picked up first
+    } else if (indexes[i] % 2 === 1 && !set.has(indexes[i] - 1)) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
+const initPopulation = (indexes: Array<number>, populationSize: number, startingPoint: number) => {
   const population = [];
 
   while (population.length < populationSize) {
-    const order = shuffle(index);
+    const order = shuffle(indexes);
 
-    if (order[0] !== startingPoint) {
-      continue;
-    }
+    if (order[0] !== startingPoint) continue;
+    if (!isValidSequence(indexes)) continue;
 
     order.push(order[0]);
     population.push({
@@ -78,11 +103,25 @@ const getPopulationFitness = (population: Array<CombinationType>) => {
     combination.distance = totalDistance;
     combination.fitness = 1 / (totalDistance + 1);
 
+    // Check if we found an improved fitness score
     if (combination.fitness > highestFitness) {
-      console.log(combination);
       highestFitness = combination.fitness;
+      curDistance = combination.distance;
     }
     fitnessScores.push(combination);
+
+    totalCombinations += 1;
+
+    if (combination.distance === answerDistance) {
+      const endTime = (new Date).getTime();
+
+      console.log({
+        totalCombinations,
+        curAnswer: combination.order,
+        distance: combination.distance,
+        algorithmDurationMs: endTime - startTime
+      });
+    }
   }
 
   // calculate total fitness
@@ -101,6 +140,7 @@ const getPopulationFitness = (population: Array<CombinationType>) => {
   return normalizedFitnessScores;
 };
 
+// picks a random index weighted by fitness % compared to entire population
 const pickOne = (population: Array<CombinationType>) => {
   let index = 0;
   let r = Math.random();
@@ -121,38 +161,44 @@ const mutate = (order: Array<number>) => {
 const nextGeneration = (population: Array<CombinationType>) => {
   const newPopulation = [];
 
-  for (let i = 0; i < population.length; i++) {
+  while (newPopulation.length < population.length) {
     const combination = pickOne(population);
     mutate(combination.order);
-    newPopulation[i] = {
+
+    if (!isValidSequence(combination.order)) continue;
+
+    newPopulation.push({
       order: [...combination.order],
       distance: 0,
       fitness: 0
-    }
+    });
   }
+
   return newPopulation;
 };
 
 const getAllTotalDistances = async (shipments: Array<ShipmentType>) => {
-  const STARTING_POINT = 0; // starting point is the waypoint at index 0;
-  const POPULATION_SIZE = 10;
-  const CYCLES = 5;
 
   const waypoints = extractWaypoints(shipments);
   const indexesArray = initIndexArray(waypoints.length);
   let population = initPopulation(indexesArray, POPULATION_SIZE, STARTING_POINT);
 
-  for (let i = 0; i < CYCLES; i++) {
+  // for (let i = 0; i < CYCLES; i++) {
+  //   const fitnessScores = getPopulationFitness(population);
+  //   population = nextGeneration(fitnessScores);
+  // }
+
+  while (curDistance !== answerDistance) {
     const fitnessScores = getPopulationFitness(population);
     population = nextGeneration(fitnessScores);
   }
 
-  const endTime = (new Date).getTime();
+  // const endTime = (new Date).getTime();
 
-  console.log({
-    matrixLength: matrix.length,
-    algorithmDurationMs: endTime - startTime
-  });
+  // console.log({
+  //   matrixLength: matrix.length,
+  //   algorithmDurationMs: endTime - startTime
+  // });
 };
 
 getAllTotalDistances(shipments);

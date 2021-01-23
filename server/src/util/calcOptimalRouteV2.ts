@@ -33,7 +33,7 @@ const extractWaypoints = (shipments: Array<ShipmentType>) => {
   return waypoints;
 };
 
-const checkValidSequence = (indexes: Array<number>) => {
+const isValidSequence = (indexes: Array<number>) => {
   const set = new Set();
   set.add(STARTING_POINT);
 
@@ -56,7 +56,7 @@ let totalCombinations = 0;
 export const getAllCombinations = (indexes: Array<number>, currentIndex: number, combinations = [] as Array<Array<number>>) => {
   if (currentIndex === indexes.length - 1) {
     if (indexes[0] !== STARTING_POINT) return;
-    if (!checkValidSequence(indexes)) return;
+    if (!isValidSequence(indexes)) return;
 
     totalCombinations += 1;
 
