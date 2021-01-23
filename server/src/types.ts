@@ -17,3 +17,11 @@ export type CombinationType = {
   distance: number
   fitness: number
 }
+
+export type MatrixValue = {
+  from: number[]
+  to: number[]
+  distance: number
+  duration: number
+  coordinates: Array<Array<number>>
+}

@@ -2,30 +2,20 @@
 ////////////// Genetic Algorithm w/ Crossover
 //////////////
 
-// import axios from 'axios';
-import { shipments } from '../index';
-import matrix from './testMatrix6Shipments';
-import { 
-  ShipmentType,
-  CombinationType,
-  // RouteType 
-} from '../types';
-// import fetchGeoJsonV2 from './fetchGeoJsonV2';
-// import util from 'util';
+import matrix from '../testing/testMatrixes/testMatrix6Shipments';
+import { ShipmentType, CombinationType } from '../types';
 import { initIndexArray, shuffle, swap } from './helpers';
 
 let highestFitness = 0;
-let curDistance = Infinity;
-let totalCombinations = 0;
+let optimalDistance = 0;
+let optimalSequence = [] as Array<number>;
 
-const answerDistance = 191526.1;
-const STARTING_POINT = 0; // starting point is the waypoint at index 0;
-
+const STARTING_POINT = 0;
 const POPULATION_SIZE = 12;
 const MUTATION_RATE = 1;
-// const CYCLES = 120;
+const CYCLES = 1000;
 
-const extractWaypoints = (shipments: Array<ShipmentType>) => {
+const getWaypoints = (shipments: Array<ShipmentType>) => {
   const waypoints = [];
 
   for (let shipment of shipments) {
@@ -44,9 +34,11 @@ const extractWaypoints = (shipments: Array<ShipmentType>) => {
   return waypoints;
 };
 
-const isValidSequence = (indexes: Array<number>) => {
+const isValidSequence = (indexes: Array<number>, startingPoint: number) => {
   const set = new Set();
-  set.add(STARTING_POINT);
+  set.add(startingPoint);
+
+  if (indexes[0] !== startingPoint) return false;
 
   for (let i = 1; i < indexes.length; i++) {
     // is a pickup location so just add it to the set
@@ -61,19 +53,18 @@ const isValidSequence = (indexes: Array<number>) => {
   return true;
 };
 
-const initPopulation = (indexes: Array<number>, populationSize: number, startingPoint: number) => {
+const initPopulation = (indexes: Array<number>, populationSize: number) => {
   const population = [];
 
   while (population.length < populationSize) {
     const order = shuffle(indexes);
-
-    if (order[0] !== startingPoint) continue;
-    if (!isValidSequence(indexes)) continue;
-
     order.push(order[0]);
+
+    if(!isValidSequence(order, STARTING_POINT)) continue;
+
     population.push({
       order,
-      distance: Infinity,
+      distance: 0,
       fitness: 0,
     });
   }
@@ -105,11 +96,10 @@ const getPopulationFitness = (population: Array<CombinationType>) => {
     // Check if we found an improved fitness score
     if (combination.fitness > highestFitness) {
       highestFitness = combination.fitness;
-      curDistance = combination.distance;
+      optimalDistance = combination.distance;
+      optimalSequence = combination.order;
     }
     fitnessScores.push(combination);
-
-    totalCombinations += 1;
   }
 
   // calculate total fitness
@@ -141,12 +131,13 @@ const pickOne = (population: Array<CombinationType>) => {
 };
 
 const mutate = (order: Array<number>, mutationRate: number) => {
+// const mutate = (order: Array<number>) => {
   // for (let i = 0; i < order.length; i++) {
-  //   if (Math.random() < mutationRate) {
+    if (Math.random() < mutationRate) {
       const indexA = Math.floor(Math.random() * (order.length - 2)) + 1;
       const indexB = Math.floor(Math.random() * (order.length - 2)) + 1;
       swap(order, indexA, indexB);
-    // }
+    }
   // }
 };
 
@@ -176,8 +167,8 @@ const nextGeneration = (population: Array<CombinationType>) => {
     const mergedOrder = crossOver(combinationA.order, combinationB.order, STARTING_POINT);
     mutate(mergedOrder, MUTATION_RATE);
 
-    if(!isValidSequence(mergedOrder)) continue;
-
+    if(!isValidSequence(mergedOrder, STARTING_POINT)) continue;
+    
     newPopulation.push({
       order: [...mergedOrder],
       distance: 0,
@@ -187,62 +178,19 @@ const nextGeneration = (population: Array<CombinationType>) => {
   return newPopulation;
 };
 
-const getAllTotalDistances = (shipments: Array<ShipmentType>) => {
-  const startTime = (new Date).getTime();
-  const waypoints = extractWaypoints(shipments);
+const calculateOptimalSequence = (shipments: Array<ShipmentType>) => {
+  const waypoints = getWaypoints(shipments);
   const indexesArray = initIndexArray(waypoints.length);
-  let population = initPopulation(indexesArray, POPULATION_SIZE, STARTING_POINT);
 
-  // for (let i = 0; i < CYCLES; i++) {
-  //   const fitnessScores = getPopulationFitness(population);
-  //   population = nextGeneration(fitnessScores, STARTING_POINT);
-  // }
-
-  while (curDistance !== answerDistance) {
+  let population = initPopulation(indexesArray, POPULATION_SIZE);
+  for (let i = 0; i < CYCLES; i++) {
     const fitnessScores = getPopulationFitness(population);
     population = nextGeneration(fitnessScores);
   }
 
-  const endTime = (new Date).getTime();
+  console.log(optimalSequence, optimalDistance)
 
-  return {
-    totalCombinations,
-    distance: curDistance,
-    duration: endTime - startTime
-  }
+  return optimalSequence;
 };
 
-getAllTotalDistances(shipments);
-
-const REPS = 200;
-
-let count = 0;
-let sumCombinations = 0;
-let sumDistance = 0;
-let sumDuration = 0;
-
-for (let i = 0; i < REPS; i++) {
-  const result = getAllTotalDistances(shipments);
-  count++;
-  sumCombinations += result.totalCombinations;
-  sumDistance += result.distance;
-  sumDuration += result.duration;
- 
-  console.log('results', {
-    count,
-    sumCombinations,
-    sumDistance,
-    sumDuration
-  })
-
-  // reset
-  highestFitness = 0;
-  curDistance = Infinity;
-  totalCombinations = 0;
-}
-
-console.log({
-  combinations: sumCombinations / REPS,
-  distance: sumDistance / REPS,
-  duration: sumDuration / REPS
-})
+export default calculateOptimalSequence;

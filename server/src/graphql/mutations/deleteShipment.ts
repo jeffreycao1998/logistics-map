@@ -1,6 +1,6 @@
 import { shipments } from '../../index';
 import { ShipmentType } from '../../types';
-import calcOptimalRoute from '../../util/calcOptimalRouteV1';
+import calcOptimalSequence from '../../util/calcOptimalSequence';
 
 type Args = {
   shipmentId: string
@@ -22,12 +22,12 @@ const deleteShipment = async (_obj: {}, args: Args, _context: {}) => {
     shipment.dropoffLocation.splice(2, 1);
   });
 
-  const routes = await calcOptimalRoute(shipments);
-
-  return {
-    shipments,
-    routes
-  };
+  const optimalSequence = await calcOptimalSequence(shipments);
+  console.log(optimalSequence);
+  // return {
+  //   shipments,
+  //   routes
+  // };
 };
 
 export default deleteShipment;

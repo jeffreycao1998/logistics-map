@@ -169,7 +169,7 @@ const Sidebar = ({ shipments, setShipments, setRoutes }: Props) => {
                 <div className='info pickup bottom-spacing'>
                   <div className='header'>
                     <h4 className='title'>Pickup</h4>
-                    <h4 className='indicator'>{`${pickupLocation[2] === undefined ? 1 : pickupLocation[2] + 2}`}</h4>
+                    <h4 className='indicator'>{`${pickupLocation[2] + 1}`}</h4>
                     <Actions className='actions'>
                       <ActionBtn color='red' onClick={() => {
                           setShowDeleteModal(true)
@@ -192,7 +192,7 @@ const Sidebar = ({ shipments, setShipments, setRoutes }: Props) => {
                 <div className='info dropoff bottom-spacing'>
                   <div className='header'>
                     <h4 className='title'>Dropoff</h4>
-                    <h4 className='indicator'>{`${dropoffLocation[2] === undefined ? 1 : dropoffLocation[2] + 2}`}</h4>                </div>
+                    <h4 className='indicator'>{`${dropoffLocation[2] + 1}`}</h4>                </div>
                   <p>{`[${ dropoffLocation[0] }, ${ dropoffLocation[1] }]`}</p>
                 </div>
                 <div className='info description'>
