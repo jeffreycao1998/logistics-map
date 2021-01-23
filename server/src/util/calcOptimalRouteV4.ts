@@ -3,8 +3,8 @@
 //////////////
 
 // import axios from 'axios';
-import { shipments, startTime } from '../index';
-import matrix from './testMatrix4Shipments';
+import { shipments } from '../index';
+import matrix from './testMatrix6Shipments';
 import { 
   ShipmentType,
   CombinationType,
@@ -15,9 +15,15 @@ import {
 import { initIndexArray, shuffle, swap } from './helpers';
 
 let highestFitness = 0;
+let curDistance = Infinity;
+let totalCombinations = 0;
+
+const answerDistance = 191526.1;
 const STARTING_POINT = 0; // starting point is the waypoint at index 0;
-const POPULATION_SIZE = 10;
-const CYCLES = 5;
+
+const POPULATION_SIZE = 12;
+const MUTATION_RATE = 1;
+// const CYCLES = 120;
 
 const extractWaypoints = (shipments: Array<ShipmentType>) => {
   const waypoints = [];
@@ -38,15 +44,31 @@ const extractWaypoints = (shipments: Array<ShipmentType>) => {
   return waypoints;
 };
 
-const initPopulation = (index: Array<number>, populationSize: number, startingPoint: number) => {
+const isValidSequence = (indexes: Array<number>) => {
+  const set = new Set();
+  set.add(STARTING_POINT);
+
+  for (let i = 1; i < indexes.length; i++) {
+    // is a pickup location so just add it to the set
+    if (indexes[i] % 2 === 0) {
+      set.add(indexes[i]);
+
+    // is a dropoff location so check if it was picked up first
+    } else if (indexes[i] % 2 === 1 && !set.has(indexes[i] - 1)) {
+      return false;
+    }
+  }
+  return true;
+};
+
+const initPopulation = (indexes: Array<number>, populationSize: number, startingPoint: number) => {
   const population = [];
 
   while (population.length < populationSize) {
-    const order = shuffle(index);
+    const order = shuffle(indexes);
 
-    if (order[0] !== startingPoint) {
-      continue;
-    }
+    if (order[0] !== startingPoint) continue;
+    if (!isValidSequence(indexes)) continue;
 
     order.push(order[0]);
     population.push({
@@ -55,7 +77,6 @@ const initPopulation = (index: Array<number>, populationSize: number, startingPo
       fitness: 0,
     });
   }
-
   return population;
 };
 
@@ -81,11 +102,14 @@ const getPopulationFitness = (population: Array<CombinationType>) => {
     combination.distance = totalDistance;
     combination.fitness = 1 / (totalDistance + 1);
 
+    // Check if we found an improved fitness score
     if (combination.fitness > highestFitness) {
-      console.log(combination);
       highestFitness = combination.fitness;
+      curDistance = combination.distance;
     }
     fitnessScores.push(combination);
+
+    totalCombinations += 1;
   }
 
   // calculate total fitness
@@ -104,6 +128,7 @@ const getPopulationFitness = (population: Array<CombinationType>) => {
   return normalizedFitnessScores;
 };
 
+// picks a random index weighted by fitness % compared to entire population
 const pickOne = (population: Array<CombinationType>) => {
   let index = 0;
   let r = Math.random();
@@ -116,13 +141,13 @@ const pickOne = (population: Array<CombinationType>) => {
 };
 
 const mutate = (order: Array<number>, mutationRate: number) => {
-  for (let i = 0; i < order.length; i++) {
-    if (Math.random() < mutationRate) {
+  // for (let i = 0; i < order.length; i++) {
+  //   if (Math.random() < mutationRate) {
       const indexA = Math.floor(Math.random() * (order.length - 2)) + 1;
       const indexB = Math.floor(Math.random() * (order.length - 2)) + 1;
       swap(order, indexA, indexB);
-    }
-  }
+    // }
+  // }
 };
 
 const crossOver = (orderA: Array<number>, orderB: Array<number>, startingPoint: number) => {
@@ -142,40 +167,82 @@ const crossOver = (orderA: Array<number>, orderB: Array<number>, startingPoint: 
   return newOrder;
 };
 
-const nextGeneration = (population: Array<CombinationType>, startingPoint: number) => {
+const nextGeneration = (population: Array<CombinationType>) => {
   const newPopulation = [];
 
-  for (let i = 0; i < population.length; i++) {
+  while (newPopulation.length < POPULATION_SIZE) {
     const combinationA = pickOne(population);
     const combinationB = pickOne(population);
-    const mergedOrder = crossOver(combinationA.order, combinationB.order, startingPoint);
-    
-    mutate(mergedOrder, .1);
-    newPopulation[i] = {
+    const mergedOrder = crossOver(combinationA.order, combinationB.order, STARTING_POINT);
+    mutate(mergedOrder, MUTATION_RATE);
+
+    if(!isValidSequence(mergedOrder)) continue;
+
+    newPopulation.push({
       order: [...mergedOrder],
       distance: 0,
       fitness: 0
-    }
+    });
   }
   return newPopulation;
 };
 
-const getAllTotalDistances = async (shipments: Array<ShipmentType>) => {
+const getAllTotalDistances = (shipments: Array<ShipmentType>) => {
+  const startTime = (new Date).getTime();
   const waypoints = extractWaypoints(shipments);
   const indexesArray = initIndexArray(waypoints.length);
   let population = initPopulation(indexesArray, POPULATION_SIZE, STARTING_POINT);
 
-  for (let i = 0; i < CYCLES; i++) {
+  // for (let i = 0; i < CYCLES; i++) {
+  //   const fitnessScores = getPopulationFitness(population);
+  //   population = nextGeneration(fitnessScores, STARTING_POINT);
+  // }
+
+  while (curDistance !== answerDistance) {
     const fitnessScores = getPopulationFitness(population);
-    population = nextGeneration(fitnessScores, STARTING_POINT);
+    population = nextGeneration(fitnessScores);
   }
 
   const endTime = (new Date).getTime();
 
-  console.log({
-    matrixLength: matrix.length,
-    algorithmDurationMs: endTime - startTime
-  });
+  return {
+    totalCombinations,
+    distance: curDistance,
+    duration: endTime - startTime
+  }
 };
 
 getAllTotalDistances(shipments);
+
+const REPS = 200;
+
+let count = 0;
+let sumCombinations = 0;
+let sumDistance = 0;
+let sumDuration = 0;
+
+for (let i = 0; i < REPS; i++) {
+  const result = getAllTotalDistances(shipments);
+  count++;
+  sumCombinations += result.totalCombinations;
+  sumDistance += result.distance;
+  sumDuration += result.duration;
+ 
+  console.log('results', {
+    count,
+    sumCombinations,
+    sumDistance,
+    sumDuration
+  })
+
+  // reset
+  highestFitness = 0;
+  curDistance = Infinity;
+  totalCombinations = 0;
+}
+
+console.log({
+  combinations: sumCombinations / REPS,
+  distance: sumDistance / REPS,
+  duration: sumDuration / REPS
+})
