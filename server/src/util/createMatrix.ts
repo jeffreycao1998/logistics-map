@@ -1,26 +1,8 @@
 import axios from "axios";
-import fs from 'fs';
-import { shipments } from "..";
-import { ShipmentType } from "../types";
+import { ShipmentType, MatrixValue } from "../types";
+import getWaypoints from '../util/getWaypoints';
 
-const extractWaypoints = (shipments: Array<ShipmentType>) => {
-  const waypoints = [];
-
-  for (let shipment of shipments) {
-    waypoints.push({
-      id: shipment.id,
-      type: 'pickup',
-      location: shipment.pickupLocation
-    });
-    waypoints.push({
-      id: shipment.id,
-      type: 'dropoff',
-      location: shipment.dropoffLocation
-    });
-  }
-
-  return waypoints;
-};
+const cache = [] as Array<MatrixValue>;
 
 const initMatrix = (totalShipments: number) => {
   const matrix = [] as Array<Array<any>>;
@@ -28,43 +10,46 @@ const initMatrix = (totalShipments: number) => {
   for (let i = 0; i < totalShipments; i++) {
     matrix.push([]);
   }
-
   return matrix;
 };
 
-let counter = 0;
-
-const stallTime = (timeToDelay: number) => new Promise((resolve) => setTimeout(resolve, timeToDelay));
-
 const createMatrix = async (shipments: Array<ShipmentType>) => {
-  const waypoints = extractWaypoints(shipments);
+  const waypoints = getWaypoints(shipments);
   const matrix = initMatrix(shipments.length * 2) as Array<Array<any>>;
 
   for (let i = 0; i < waypoints.length; i++) {
     for (let j = 0; j < waypoints.length; j++) {
-      const urlWaypoints = `${waypoints[i].location[0]},${waypoints[i].location[1]};${waypoints[j].location[0]},${waypoints[j].location[1]}`;
-      const url = `https://api.mapbox.com/optimized-trips/v1/mapbox/driving/${urlWaypoints}?source=first&destination=last&roundtrip=false&geometries=geojson&access_token=${process.env.MAPBOX_ACCESS_KEY}`;
-      await axios.get(url)
-      .then(res => {
-        matrix[i][j] = {
-          from: [...waypoints[i].location],
-          to: [...waypoints[j].location],
-          distance: res.data.trips[0].distance,
-          duration: res.data.trips[0].duration,
-          coordinates: res.data.trips[0].geometry.coordinates
-        }
-      })
-      .catch(err => console.log(err));
-      
-      counter += 1;
-      console.log(counter)
-      await stallTime(200);
+      const cachedValue = cache.filter((value: MatrixValue) => {
+        return value.from[0] === waypoints[i].location[0] &&
+          value.from[1] === waypoints[i].location[1] &&
+          value.to[0] === waypoints[j].location[0] &&
+          value.to[1] === waypoints[j].location[1];
+      })[0];
+
+      if (cachedValue) {  // check if these coordinates were previously computed
+        matrix[i][j] = cachedValue;
+
+      } else {
+        const urlWaypoints = `${waypoints[i].location[0]},${waypoints[i].location[1]};${waypoints[j].location[0]},${waypoints[j].location[1]}`;
+        const url = `https://api.mapbox.com/optimized-trips/v1/mapbox/driving/${urlWaypoints}?source=first&destination=last&roundtrip=false&geometries=geojson&access_token=${process.env.MAPBOX_ACCESS_KEY}`;
+        
+        await axios.get(url)
+        .then(res => {
+          const value = {
+            from: [...waypoints[i].location],
+            to: [...waypoints[j].location],
+            distance: res.data.trips[0].distance,
+            duration: res.data.trips[0].duration,
+            coordinates: res.data.trips[0].geometry.coordinates
+          }
+          matrix[i][j] = value;
+          cache.push(value);
+        })
+        .catch(err => console.log(err));
+      }
     }
   };
-
-  const data = JSON.stringify(matrix);
-  fs.writeFileSync('testMatrix4Shipments', data);
   return matrix;
 };
 
-createMatrix(shipments);
+export default createMatrix;

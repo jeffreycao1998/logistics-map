@@ -5,6 +5,7 @@
 import matrix from '../testing/testMatrixes/testMatrix6Shipments';
 import { ShipmentType, CombinationType } from '../types';
 import { initIndexArray, shuffle, swap } from './helpers';
+import getWaypoints from './getWaypoints';
 
 let highestFitness = 0;
 let optimalDistance = 0;
@@ -14,25 +15,6 @@ const STARTING_POINT = 0;
 const POPULATION_SIZE = 12;
 const MUTATION_RATE = 1;
 const CYCLES = 1000;
-
-const getWaypoints = (shipments: Array<ShipmentType>) => {
-  const waypoints = [];
-
-  for (let shipment of shipments) {
-    waypoints.push({
-      id: shipment.id,
-      type: 'pickup',
-      location: shipment.pickupLocation
-    });
-    waypoints.push({
-      id: shipment.id,
-      type: 'dropoff',
-      location: shipment.dropoffLocation
-    });
-  }
-
-  return waypoints;
-};
 
 const isValidSequence = (indexes: Array<number>, startingPoint: number) => {
   const set = new Set();

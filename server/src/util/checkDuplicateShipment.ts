@@ -7,9 +7,9 @@ const checkDuplicateShipment = (shipments: Array<ShipmentType>, { pickupLocation
       shipment.dropoffLocation[0] === dropoffLocation[0] &&
       shipment.dropoffLocation[1] === dropoffLocation[1] &&
       shipment.description === description;
-  }).length > 0;
+  });
 
-  return identicalRoute;
+  return identicalRoute.length > 0;
 };
 
 export default checkDuplicateShipment;

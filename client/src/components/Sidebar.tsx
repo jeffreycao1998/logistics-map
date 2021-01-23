@@ -128,7 +128,6 @@ type Props = {
 }
 
 const Sidebar = ({ shipments, setShipments, setRoutes }: Props) => {
-  const [selectedId, setSelectedId] = useState('');
   const [showEditModal, setShowEditModal] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -215,7 +214,7 @@ const Sidebar = ({ shipments, setShipments, setRoutes }: Props) => {
         {
           showEditModal &&
           <EditShipmentModal
-            shipmentId={selectedId}
+            shipmentId={selectedShipmentId}
             setShowModal={setShowEditModal}
             initPickupLng={selectedPickupLocation[0].toString()}
             initPickupLat={selectedPickupLocation[1].toString()}
@@ -229,7 +228,7 @@ const Sidebar = ({ shipments, setShipments, setRoutes }: Props) => {
         {
           showDeleteModal &&
           <DeleteShipmentModal
-            shipmentId={selectedId}
+            shipmentId={selectedShipmentId}
             setShowModal={setShowDeleteModal}
             initPickupLng={selectedPickupLocation[0].toString()}
             initPickupLat={selectedPickupLocation[1].toString()}
