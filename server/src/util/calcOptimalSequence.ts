@@ -1,9 +1,4 @@
-//////////////
-////////////// Genetic Algorithm w/ Crossover
-//////////////
-
-import matrix from '../testing/testMatrixes/testMatrix6Shipments';
-import { ShipmentType, CombinationType } from '../types';
+import { ShipmentType, CombinationType, MatrixValue } from '../types';
 import { initIndexArray, shuffle, swap } from './helpers';
 import getWaypoints from './getWaypoints';
 
@@ -11,11 +6,8 @@ let highestFitness = 0;
 let optimalDistance = 0;
 let optimalSequence = [] as Array<number>;
 
-const STARTING_POINT = 0;
-const POPULATION_SIZE = 12;
-const MUTATION_RATE = 1;
-const CYCLES = 1000;
-
+// checks for correct starting point and makes sure dropoff points for a 
+// specific shipment isn't visited before the corresponding pickup point
 const isValidSequence = (indexes: Array<number>, startingPoint: number) => {
   const set = new Set();
   set.add(startingPoint);
@@ -35,14 +27,14 @@ const isValidSequence = (indexes: Array<number>, startingPoint: number) => {
   return true;
 };
 
-const initPopulation = (indexes: Array<number>, populationSize: number) => {
+const initPopulation = (indexes: Array<number>, populationSize: number, startingPoint: number) => {
   const population = [];
 
   while (population.length < populationSize) {
     const order = shuffle(indexes);
     order.push(order[0]);
 
-    if(!isValidSequence(order, STARTING_POINT)) continue;
+    if(!isValidSequence(order, startingPoint)) continue;
 
     population.push({
       order,
@@ -53,7 +45,7 @@ const initPopulation = (indexes: Array<number>, populationSize: number) => {
   return population;
 };
 
-const getPopulationFitness = (population: Array<CombinationType>) => {
+const getPopulationFitness = (population: Array<CombinationType>, matrix: Array<Array<MatrixValue>>) => {
   const fitnessScores = [];
 
   for (let combination of population) {
@@ -140,16 +132,16 @@ const crossOver = (orderA: Array<number>, orderB: Array<number>, startingPoint: 
   return newOrder;
 };
 
-const nextGeneration = (population: Array<CombinationType>) => {
+const nextGeneration = (population: Array<CombinationType>, mutationRate: number, populationSize: number, startingPoint: number) => {
   const newPopulation = [];
 
-  while (newPopulation.length < POPULATION_SIZE) {
+  while (newPopulation.length < populationSize) {
     const combinationA = pickOne(population);
     const combinationB = pickOne(population);
-    const mergedOrder = crossOver(combinationA.order, combinationB.order, STARTING_POINT);
-    mutate(mergedOrder, MUTATION_RATE);
+    const mergedOrder = crossOver(combinationA.order, combinationB.order, startingPoint);
+    mutate(mergedOrder, mutationRate);
 
-    if(!isValidSequence(mergedOrder, STARTING_POINT)) continue;
+    if(!isValidSequence(mergedOrder, startingPoint)) continue;
     
     newPopulation.push({
       order: [...mergedOrder],
@@ -160,14 +152,22 @@ const nextGeneration = (population: Array<CombinationType>) => {
   return newPopulation;
 };
 
-const calculateOptimalSequence = (shipments: Array<ShipmentType>) => {
+const calculateOptimalSequence = (shipments: Array<ShipmentType>, matrix: Array<Array<MatrixValue>>, startingPoint: number) => {
+  highestFitness = 0;
   const waypoints = getWaypoints(shipments);
   const indexesArray = initIndexArray(waypoints.length);
+  const populationSize = waypoints.length * 2;
+  const maxCycles = 2000;
+  let cyclesRan = 0;
+  let mutationRate = 1 // approach 0 as you go through more cycles;
 
-  let population = initPopulation(indexesArray, POPULATION_SIZE);
-  for (let i = 0; i < CYCLES; i++) {
-    const fitnessScores = getPopulationFitness(population);
-    population = nextGeneration(fitnessScores);
+  let population = initPopulation(indexesArray, populationSize, startingPoint);
+  for (let i = 0; i < maxCycles; i++) {
+    cyclesRan++;
+    mutationRate = (-(1/10) * cyclesRan ** 2) + maxCycles
+
+    const fitnessScores = getPopulationFitness(population, matrix);
+    population = nextGeneration(fitnessScores, mutationRate, populationSize, startingPoint);
   }
 
   console.log(optimalSequence, optimalDistance)

@@ -23,4 +23,8 @@ export const shuffle = (arr: Array<number>) => {
     arr[i] = temp;
   }
   return [...arr];
-}
+};
+
+export const sleep = (ms: number) => {
+  return new Promise(resolve => setTimeout(resolve, ms));
+};

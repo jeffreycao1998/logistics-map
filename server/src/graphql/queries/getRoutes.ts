@@ -1,12 +1,15 @@
 import { shipments } from '../../index';
-import matrix from '../../testing/testMatrixes/testMatrix6Shipments';
 
+import createMatrix from '../../util/createMatrix';
 import calcOptimalSequence from '../../util/calcOptimalSequence';
 import joinRoutes from '../../util/joinRoutes';
 import addSequenceNumber from '../../util/addSequenceNumber';
 
 const getRoutes = async (_obj: {}, _args: {}, _context: {}) => {
-  const optimalSequence = calcOptimalSequence(shipments);
+  const startingPoint = 0;
+
+  const matrix = await createMatrix(shipments);
+  const optimalSequence = calcOptimalSequence(shipments, matrix, startingPoint);
   const routes = joinRoutes(matrix, optimalSequence);
   addSequenceNumber(shipments, optimalSequence, 0);
   

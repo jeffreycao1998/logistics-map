@@ -1,8 +1,11 @@
-require('dotenv');
 import { shipments } from '../../index';
 import { ShipmentType } from '../../types';
+
 import checkDuplicateShipment from '../../util/checkDuplicateShipment';
+import createMatrix from '../../util/createMatrix';
 import calcOptimalSequence from '../../util/calcOptimalSequence';
+import joinRoutes from '../../util/joinRoutes';
+import addSequenceNumber from '../../util/addSequenceNumber';
 
 interface Args extends ShipmentType {
   shipmentId: string
@@ -26,12 +29,14 @@ const editShipment = async (_obj: {}, args: Args, _context: {}) => {
   selectedShipment.dropoffLocation = dropoffLocation;
   selectedShipment.description= description;
 
-  const optimalSequence = await calcOptimalSequence(shipments);
-  console.log(optimalSequence);
-  // return {
-  //   shipments,
-  //   routes,
-  // };
+  const startingPoint = 0;
+
+  const matrix = await createMatrix(shipments);
+  const optimalSequence = calcOptimalSequence(shipments, matrix, startingPoint);
+  const routes = joinRoutes(matrix, optimalSequence);
+  addSequenceNumber(shipments, optimalSequence, 0);
+  
+  return { shipments, routes };
 };
 
 export default editShipment;

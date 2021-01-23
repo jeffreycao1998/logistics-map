@@ -1,6 +1,10 @@
 import { shipments } from '../../index';
 import { ShipmentType } from '../../types';
+
+import createMatrix from '../../util/createMatrix';
 import calcOptimalSequence from '../../util/calcOptimalSequence';
+import joinRoutes from '../../util/joinRoutes';
+import addSequenceNumber from '../../util/addSequenceNumber';
 
 type Args = {
   shipmentId: string
@@ -16,18 +20,14 @@ const deleteShipment = async (_obj: {}, args: Args, _context: {}) => {
   const removeIndex = shipments.indexOf(removeShipment);
   shipments.splice(removeIndex, 1);
 
-  // reset sequence
-  shipments.forEach((shipment: ShipmentType) => {
-    shipment.pickupLocation.splice(2, 1);
-    shipment.dropoffLocation.splice(2, 1);
-  });
+  const startingPoint = 0;
 
-  const optimalSequence = await calcOptimalSequence(shipments);
-  console.log(optimalSequence);
-  // return {
-  //   shipments,
-  //   routes
-  // };
+  const matrix = await createMatrix(shipments);
+  const optimalSequence = calcOptimalSequence(shipments, matrix, startingPoint);
+  const routes = joinRoutes(matrix, optimalSequence);
+  addSequenceNumber(shipments, optimalSequence, 0);
+  
+  return { shipments, routes };
 };
 
 export default deleteShipment;
