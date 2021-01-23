@@ -1,3 +1,7 @@
+//////////////
+////////////// BASIC IN ORDER ALGORITHM (does not scale very well at all)
+//////////////
+
 import { ShipmentType, RouteType } from '../types';
 import fetchGeoJson from './fetchGeoJson';
 

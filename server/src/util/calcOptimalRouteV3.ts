@@ -4,7 +4,7 @@
 
 // import axios from 'axios';
 import { shipments, startTime } from '../index';
-import matrix from './testMatrix';
+import matrix from './testMatrix2Shipments';
 import { 
   ShipmentType,
   CombinationType,

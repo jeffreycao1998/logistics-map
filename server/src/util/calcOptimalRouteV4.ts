@@ -4,7 +4,7 @@
 
 // import axios from 'axios';
 import { shipments, startTime } from '../index';
-import matrix from './testMatrix';
+import matrix from './testMatrix4Shipments';
 import { 
   ShipmentType,
   CombinationType,
@@ -15,6 +15,9 @@ import {
 import { initIndexArray, shuffle, swap } from './helpers';
 
 let highestFitness = 0;
+const STARTING_POINT = 0; // starting point is the waypoint at index 0;
+const POPULATION_SIZE = 10;
+const CYCLES = 5;
 
 const extractWaypoints = (shipments: Array<ShipmentType>) => {
   const waypoints = [];
@@ -158,10 +161,6 @@ const nextGeneration = (population: Array<CombinationType>, startingPoint: numbe
 };
 
 const getAllTotalDistances = async (shipments: Array<ShipmentType>) => {
-  const STARTING_POINT = 0; // starting point is the waypoint at index 0;
-  const POPULATION_SIZE = 10;
-  const CYCLES = 5;
-
   const waypoints = extractWaypoints(shipments);
   const indexesArray = initIndexArray(waypoints.length);
   let population = initPopulation(indexesArray, POPULATION_SIZE, STARTING_POINT);
