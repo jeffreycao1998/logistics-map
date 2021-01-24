@@ -46,10 +46,13 @@ After running npm start in both the client and server folder, navigate to localh
 
 ### Valid Coordinates
 
-#### Longitude -180 to 180
-#### Latitude -90 to 90
+#### Longitude: -180 to 180
+#### Latitude: -90 to 90
 
+#### Creating a shipment
 ![](https://github.com/jeffreycao1998/route-mapper/blob/master/documents/create-shipment.gif?raw=true)
+
+#### Deleting a shipment
 ![](https://github.com/jeffreycao1998/route-mapper/blob/master/documents/create-delete.gif?raw=true)
 
 ## Tech Stack
