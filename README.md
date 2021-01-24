@@ -44,12 +44,14 @@ These instructions include instructions to run both the front end and back end
 
 ## Usage
 
-After running npm start in both the client and server folder, navigate to localhost:3000 in your browser. Press "Create" at the top right corner of the side bar which opens up a modal. Create a shipment by entering it's pickup and dropoff coordinates and also a short description of the shipment. Press create and after a brief moment, it should automatically zoom into/out far enough to see the entire route comfortably. If you want to edit or delete a shipment, hover over the appropriate card in the side bar. 
+After running npm start in both the client and server folder, navigate to localhost:3000 in your browser. Press "Create" at the top right corner of the side bar which opens up a modal. Create a shipment by entering it's pickup and dropoff coordinates and also a short description of the shipment. After pressing create, it should automatically target the map area to be able to visualize the entirety of the route. If you want to edit or delete a shipment, you can hover over the appropriate route card to trigger the specific action. 
 
 ### Valid Coordinates
 
 #### Longitude: -180 to 180
 #### Latitude: -90 to 90
+
+# Demo
 
 #### Creating a shipment
 ![](https://github.com/jeffreycao1998/route-mapper/blob/master/documents/create-shipment.gif?raw=true)
@@ -58,12 +60,6 @@ After running npm start in both the client and server folder, navigate to localh
 ![](https://github.com/jeffreycao1998/route-mapper/blob/master/documents/create-delete.gif?raw=true)
 
 # Tech Stack
-
-## Backend
-
-GraphQL w/ Apollo Server
-
-Typescript Node
 
 ## Frontend
 
@@ -75,16 +71,29 @@ Typescript React
 
 Styled Components
 
+## Backend
+
+GraphQL w/ Apollo Server
+
+Typescript Node
+
 # Problem
 
 Given a list of cities and the distances between each pair of cities, what is the shortest possible route that visits each city exactly once and returns to the origin city?
 
-# Solutions
+# Solution
 
-The first solution I tried used a brute force algorithm which simply made a list of every possible combination and looped through all of them, calculating the total distance of the sequence and recording the shortest one. This solution quickly became obselete as I added more and more routes as the number of possible solutions increases at the rate n!. After allocating 8gb of ram to node, it would constantly run out of memory at 14 + locations and took well over 10 minutes.
+In order to solve this problem I have made serveral attempts to find the optimal solution. 
 
-The second solution I tried was a Genetic Algorithm. I started out by creating an initial "population", which in this case was a short list of possible combinations. Next I would calculate the total distance of each combination and assign a "fitness" score to it. In this case, the lower the distance, the higher the fitness. From this I would generate the next generation of a population. The next generation is created by picking 2 random combinations from the previous population and combining them into one. The rate of which combination will be picked is weighted by the combination's fitness score; so that combinations that are more fit are more likely to appear in the next generations. This means that the next generation will keep getting better and better! After merging two combinations I swap 2 points in the combination at a "mutation rate". This rate lowers as I iterate through more and more generations at an exponential rate.
+The first attempt I tried to use a brute force algorithm which simply made a list of every possible combination and looped through all of them, calculating the total distance of the sequence and recording the shortest one. This solution quickly became obselete as I added more and more routes as the number of possible solutions increases at the rate n!. After allocating 8gb of ram to node, it would constantly run out of memory at 14 + locations and took well over 10 minutes before crashing.
 
-## Conclusion
+In my second attempt I tried to use a Genetic Algorithm. This algorithm starts out by creating an initial "population", which in this case was a short list of possible combinations. Next I would calculate the total distance of each combination and assign a "fitness" score to it. In this case, the lower the distance, the higher the fitness. From this I would generate the next generation of a population. The next generation is created by picking 2 random combinations from the previous population and combining them into one. The rate of which combination will be picked is weighted by the combination's fitness score; so that combinations that are more fit are more likely to appear in the next generations. This means that the next generation will keep getting better and better! After merging two combinations I swap 2 points in the combination at a "mutation rate". This rate lowers as I iterate through more and more generations at an exponential rate.
 
-This was a lot of fun but I still have a lot of fine tuning and research to do if I want a higher accuracy.
+# Future Improvements
+
+-  add ability to change starting location
+-  algorithm accuracy/efficiency
+
+# Conclusion
+
+I had a lot fun building this project out. I learned a lot about the traveling salesman algorithm. However, in order to be hyper performant I believe theres still a little fine tuning and academic research that needs to be done.
