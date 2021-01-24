@@ -84,7 +84,7 @@ const Actions = styled.div`
 `;
 
 type ActionBtnProps = {
-  color: 'blue' | 'red' | 'green'
+  backgroundColor: 'blue' | 'red' | 'green'
 }
 
 const ActionBtn = styled.div`
@@ -99,21 +99,44 @@ const ActionBtn = styled.div`
   margin-left: 8px;
   cursor: pointer;
 
-  ${({color}: ActionBtnProps) => {
-    if (color === 'blue') {
-      return `
-        background-color: #188bb1;
-      `;
-    }
-    if (color === 'red') {
-      return `
-        background-color: #da3a2f;
-      `;
-    }
-    if (color === 'green') {
-      return `
-        background-color: #34a037;
-      `;
+  ${({backgroundColor}: ActionBtnProps) => {
+    // if (color === 'blue') {
+    //   return `
+    //     background-color: #188bb1;
+    //   `;
+    // }
+    // if (color === 'red') {
+    //   return `
+    //     background-color: #da3a2f;
+    //   `;
+    // }
+    // if (color === 'green') {
+    //   return `
+    //     background-color: #34a037;
+    //   `;
+    // }
+    switch (backgroundColor) {
+      case 'blue':
+        return `
+          background-color: #188bb1;
+          :hover {
+            background-color: #1581a5;
+          }
+        `;
+      case 'red':
+        return `
+          background-color: #da3a2f;
+          :hover {
+            background-color: #c43329;
+          }
+        `;
+      default:
+        return `
+          background-color: #4caf50;
+          :hover {
+            background-color: #48a54b;
+          }
+        `;
     }
   }}
 
@@ -148,7 +171,7 @@ const Sidebar = ({ shipments, setShipments, setRoutes }: Props) => {
   return (
     <Container>
       <Header>
-        <ActionBtn color='green' onClick={() => setShowCreateModal(true)}>
+        <ActionBtn backgroundColor='green' onClick={() => setShowCreateModal(true)}>
           {/* @ts-ignore */}
           <ion-icon name="duplicate-outline"></ion-icon>
           Create
@@ -165,14 +188,14 @@ const Sidebar = ({ shipments, setShipments, setRoutes }: Props) => {
                       <h4 className='title'>Pickup</h4>
                       <h4 className='indicator'>{`${pickupLocation[2] + 1}`}</h4>
                       <Actions className='actions'>
-                        <ActionBtn color='red' onClick={() => {
+                        <ActionBtn backgroundColor='red' onClick={() => {
                             setShowDeleteModal(true)
                             setSelectedShipment(id, pickupLocation, dropoffLocation, description);
                           }}>
                           {/* @ts-ignore */}
                           <ion-icon name="trash-outline"></ion-icon>
                         </ActionBtn>
-                        <ActionBtn color='blue' onClick={() => {
+                        <ActionBtn backgroundColor='blue' onClick={() => {
                             setShowEditModal(true);
                             setSelectedShipment(id, pickupLocation, dropoffLocation, description);
                           }}>
