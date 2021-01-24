@@ -2,7 +2,7 @@
 
 ## Description
 
-Route mapper is a project that helps visualize routes for a set of pickup and dropoff locations. This app is made for dispatchers who needs to determine their driver's routes for deliveries. This application uses a genetic algorithm to solve the traveling salesman problem.
+Route mapper is a project that helps visualize routes for a set of pickup and dropoff locations. This app is made for dispatchers who needs to determine their driver's routes for deliveries. This application uses a genetic algorithm to address the traveling salesman problem.
 
 ## Getting Started
 
@@ -83,7 +83,7 @@ Given a list of cities and the distances between each pair of cities, what is th
 
 # Solution
 
-In order to solve this problem I have made serveral attempts to find the optimal solution. In my first attempt I tried to use a brute force algorithm which simply made a list of every possible combination and looped through all of them, calculating the total distance of the sequence and recording the shortest one. This solution quickly became obselete as I added more and more routes as the number of possible solutions increases at the rate n!. After allocating 8gb of ram to node, it would constantly run out of memory at 14 + locations and took well over 10 minutes before crashing.
+In order to address this problem I have made serveral attempts to find the optimal solution. In my first attempt I tried to use a brute force algorithm which simply made a list of every possible combination and looped through all of them, calculating the total distance of the sequence and recording the shortest one. This solution quickly became obselete as I added more and more routes as the number of possible solutions increases at the rate n!.
 
 In my second attempt I tried to use a Genetic Algorithm. This algorithm starts out by creating an initial "population", which in this case was a short list of possible combinations. Next I would calculate the total distance of each combination and assign a "fitness" score to it. In this case, the lower the distance, the higher the fitness. From this I would generate the next generation of a population. The next generation is created by picking 2 random combinations from the previous population and combining them into one. The rate of which combination will be picked is weighted by the combination's fitness score; so that combinations that are more fit are more likely to appear in the next generations. This means that the next generation will keep getting better and better! After merging two combinations I swap 2 points in the combination at a "mutation rate". This rate lowers as I iterate through more and more generations, at an exponential rate, and as the rate lowers, I'll get fewer and fewer random swaps.
 
@@ -94,4 +94,4 @@ In my second attempt I tried to use a Genetic Algorithm. This algorithm starts o
 
 # Conclusion
 
-I had a lot fun building this project out. I learned a lot about the traveling salesman algorithm. However, in order to be hyper performant I believe theres still a little fine tuning and academic research that needs to be done.
+I had a lot fun building this project out and learned a lot about Genetic Algorithms. Although it works decently well, theres still a lot of fine tuning and academic research that needs to be done to get an optimal solution.
