@@ -2,7 +2,6 @@ import { ShipmentType, CombinationType, MatrixValue } from '../types';
 import { initIndexArray, shuffle, swap } from './helpers';
 import getWaypoints from './getWaypoints';
 
-let highestFitness = 0;
 let optimalDistance = 0;
 let optimalSequence = [] as Array<number>;
 
@@ -47,6 +46,7 @@ const initPopulation = (indexes: Array<number>, populationSize: number, starting
 
 const getPopulationFitness = (population: Array<CombinationType>, matrix: Array<Array<MatrixValue>>) => {
   const fitnessScores = [];
+  let highestFitness = 0;
 
   for (let combination of population) {
     let lastIndex = null;
@@ -153,24 +153,26 @@ const nextGeneration = (population: Array<CombinationType>, mutationRate: number
 };
 
 const calculateOptimalSequence = (shipments: Array<ShipmentType>, matrix: Array<Array<MatrixValue>>, startingPoint: number) => {
-  highestFitness = 0;
+  const startTime = (new Date).getTime();
   const waypoints = getWaypoints(shipments);
   const indexesArray = initIndexArray(waypoints.length);
   const populationSize = waypoints.length * 4;
   const maxCycles = 2000;
   let cyclesRan = 0;
-  let mutationRate = 1 // approach 0 as you go through more cycles;
+  let mutationRate = 1;
 
   let population = initPopulation(indexesArray, populationSize, startingPoint);
   for (let i = 0; i < maxCycles; i++) {
     cyclesRan++;
-    mutationRate = (-(1/10) * cyclesRan ** 2) + maxCycles
+    mutationRate = (-(1/10) * cyclesRan ** 2) + maxCycles;  // approaches 0 as you go through more generations;
 
     const fitnessScores = getPopulationFitness(population, matrix);
     population = nextGeneration(fitnessScores, mutationRate, populationSize, startingPoint);
   }
 
-  console.log(optimalSequence, optimalDistance)
+  console.log('Optimal Sequence: ', optimalSequence);
+  console.log('Optimal Distance: ', optimalDistance);
+  console.log('Run duration: ', (new Date).getTime() - startTime);
 
   return optimalSequence;
 };

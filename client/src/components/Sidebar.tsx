@@ -143,13 +143,6 @@ const Sidebar = ({ shipments, setShipments, setRoutes }: Props) => {
     setSelectedDropoffLocation([...dropoffLocation]);
     setSelectedDescription(description);
   };
-
-  // const resetSelectedShipment = () => {
-  //   setSelectedShipmentId('');
-  //   setSelectedPickupLocation([] as Array<number>);
-  //   setSelectedDropoffLocation([] as Array<number>);
-  //   setSelectedDescription('');
-  // };
   
   return (
     <Container>
@@ -191,7 +184,8 @@ const Sidebar = ({ shipments, setShipments, setRoutes }: Props) => {
                 <div className='info dropoff bottom-spacing'>
                   <div className='header'>
                     <h4 className='title'>Dropoff</h4>
-                    <h4 className='indicator'>{`${dropoffLocation[2] + 1}`}</h4>                </div>
+                    <h4 className='indicator'>{`${dropoffLocation[2] + 1}`}</h4>
+                  </div>
                   <p>{`[${ dropoffLocation[0] }, ${ dropoffLocation[1] }]`}</p>
                 </div>
                 <div className='info description'>
@@ -206,7 +200,6 @@ const Sidebar = ({ shipments, setShipments, setRoutes }: Props) => {
           showCreateModal &&
           <CreateShipmentModal
             setShowModal={setShowCreateModal}
-            shipments={shipments}
             setShipments={setShipments}
             setRoutes={setRoutes}
           />
@@ -230,11 +223,6 @@ const Sidebar = ({ shipments, setShipments, setRoutes }: Props) => {
           <DeleteShipmentModal
             shipmentId={selectedShipmentId}
             setShowModal={setShowDeleteModal}
-            initPickupLng={selectedPickupLocation[0].toString()}
-            initPickupLat={selectedPickupLocation[1].toString()}
-            initDropoffLng={selectedDropoffLocation[0].toString()}
-            initDropoffLat={selectedDropoffLocation[1].toString()}
-            initDescription={selectedDescription}
             setShipments={setShipments}
             setRoutes={setRoutes}
           />

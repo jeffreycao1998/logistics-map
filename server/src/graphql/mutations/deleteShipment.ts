@@ -19,6 +19,13 @@ const deleteShipment = async (_obj: {}, args: Args, _context: {}) => {
 
   const removeIndex = shipments.indexOf(removeShipment);
   shipments.splice(removeIndex, 1);
+  
+  if (shipments.length === 0) {
+    return {
+      shipments: [],
+      routes: []
+    };
+  }
 
   const startingPoint = 0;
 
@@ -26,7 +33,6 @@ const deleteShipment = async (_obj: {}, args: Args, _context: {}) => {
   const optimalSequence = calcOptimalSequence(shipments, matrix, startingPoint);
   const routes = joinRoutes(matrix, optimalSequence);
   addSequenceNumber(shipments, optimalSequence, 0);
-  
   return { shipments, routes };
 };
 
