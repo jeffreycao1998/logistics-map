@@ -50,6 +50,7 @@ After running npm start in both the client and server folder, navigate to localh
 #### Latitude -90 to 90
 
 ![](https://github.com/jeffreycao1998/route-mapper/blob/master/documents/create-shipment.gif?raw=true)
+![](https://github.com/jeffreycao1998/route-mapper/blob/master/documents/create-delete.gif?raw=true)
 
 ## Tech Stack
 
