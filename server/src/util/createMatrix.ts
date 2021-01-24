@@ -1,11 +1,8 @@
 import axios from "axios";
 import { ShipmentType, MatrixValue } from "../types";
 import getWaypoints from '../util/getWaypoints';
-import fs from 'fs';
-import { sleep } from '../util/helpers';
 
-import cache from '../experiment/cache/10shipmentCache';
-// const cache = [] as Array<MatrixValue>;
+const cache = [] as Array<MatrixValue>;
 
 const initMatrix = (totalShipments: number) => {
   const matrix = [] as Array<Array<any>>;
@@ -35,8 +32,7 @@ const createMatrix = async (shipments: Array<ShipmentType>) => {
       } else {
         const urlWaypoints = `${waypoints[i].location[0]},${waypoints[i].location[1]};${waypoints[j].location[0]},${waypoints[j].location[1]}`;
         const url = `https://api.mapbox.com/optimized-trips/v1/mapbox/driving/${urlWaypoints}?source=first&destination=last&roundtrip=false&geometries=geojson&access_token=${process.env.MAPBOX_ACCESS_KEY}`;
-        await sleep(500);
-        console.log(i, j);
+        
         await axios.get(url)
         .then(res => {
           const value = {
@@ -53,7 +49,6 @@ const createMatrix = async (shipments: Array<ShipmentType>) => {
       }
     }
   };
-  fs.writeFileSync('10shipmentCache', JSON.stringify(cache));
   return matrix;
 };
 
