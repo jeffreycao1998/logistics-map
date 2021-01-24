@@ -2,7 +2,7 @@
 
 ## Description
 
-This project was built was built for an imaginary dispatcher who needs to be able to map out an optimal route for a driver to deliver goods. It uses a Genetic Algorithm (GA) in an attempt to solve the traveling salesman problem.
+This project was built for an imaginary dispatcher who needs to be able to map out an optimal route for a driver to deliver goods. It uses a Genetic Algorithm (GA) in an attempt to solve the traveling salesman problem.
 
 ## Getting Started
 
@@ -81,7 +81,7 @@ Given a list of cities and the distances between each pair of cities, what is th
 
 The first solution I tried used a brute force algorithm which simply made a list of every possible combination and looped through all of them, calculating the total distance of the sequence and recording the shortest one. This solution quickly became obselete as I added more and more routes as the number of possible solutions increases at the rate n!. After allocating 8gb of ram to node, it would constantly run out of memory at 14 + locations and took well over 10 minutes.
 
-The second solution I tried was a Genetic Algorithm. I started out by created an initial "population", which in this case was a short list of possible combinations. Next I would calculate the total distance of each combination and assign a "fitness" score to it. In this case, the lower the distance, the higher the fitness. From this I would generate the next generation of a population. The next generation is created by picking 2 random combinations from the previous population and combining them into one. The rate of which combination will be picked is weighted by a combination's fitness score so that combinations that are more fit are more likely to appear in the next generations. This means that the next generation will keep getting more and more accurate! After merging two combinations I swap 2 points in the combination at a "mutation rate". This rate lowers as I iterate through more and more generations at an exponential rate.
+The second solution I tried was a Genetic Algorithm. I started out by creating an initial "population", which in this case was a short list of possible combinations. Next I would calculate the total distance of each combination and assign a "fitness" score to it. In this case, the lower the distance, the higher the fitness. From this I would generate the next generation of a population. The next generation is created by picking 2 random combinations from the previous population and combining them into one. The rate of which combination will be picked is weighted by the combination's fitness score; so that combinations that are more fit are more likely to appear in the next generations. This means that the next generation will keep getting better and better! After merging two combinations I swap 2 points in the combination at a "mutation rate". This rate lowers as I iterate through more and more generations at an exponential rate.
 
 ## Conclusion
 
