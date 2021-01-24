@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { ShipmentType, RouteType } from '../types';
+import { ShipmentType, RouteType } from '../../types';
 
 // components
-import EditShipmentModal from './Modals/EditShipmentModal';
-import CreateShipmentModal from './Modals/CreateShipmentModal';
-import DeleteShipmentModal from './Modals/DeleteShipmentModal';
+import SidebarEmptyState from './SidebarEmptyState';
+import EditShipmentModal from '../Modals/EditShipmentModal';
+import CreateShipmentModal from '../Modals/CreateShipmentModal';
+import DeleteShipmentModal from '../Modals/DeleteShipmentModal';
 
 const Container = styled.div`
   width: 400px;
@@ -155,46 +156,48 @@ const Sidebar = ({ shipments, setShipments, setRoutes }: Props) => {
       </Header>
       <ContentContainer>
         {
-          shipments.length > 0 && shipments.map(({ id, pickupLocation, dropoffLocation, description }: ShipmentType) => {
-            return (
-              <WaypointContainer key={id}>
-                <div className='info pickup bottom-spacing'>
-                  <div className='header'>
-                    <h4 className='title'>Pickup</h4>
-                    <h4 className='indicator'>{`${pickupLocation[2] + 1}`}</h4>
-                    <Actions className='actions'>
-                      <ActionBtn color='red' onClick={() => {
-                          setShowDeleteModal(true)
-                          setSelectedShipment(id, pickupLocation, dropoffLocation, description);
-                        }}>
-                        {/* @ts-ignore */}
-                        <ion-icon name="trash-outline"></ion-icon>
-                      </ActionBtn>
-                      <ActionBtn color='blue' onClick={() => {
-                          setShowEditModal(true);
-                          setSelectedShipment(id, pickupLocation, dropoffLocation, description);
-                        }}>
-                        {/* @ts-ignore */}
-                        <ion-icon name="create-outline"></ion-icon>
-                      </ActionBtn>
-                    </Actions>
+          shipments.length > 0
+          ? shipments.map(({ id, pickupLocation, dropoffLocation, description }: ShipmentType) => {
+              return (
+                <WaypointContainer key={id}>
+                  <div className='info pickup bottom-spacing'>
+                    <div className='header'>
+                      <h4 className='title'>Pickup</h4>
+                      <h4 className='indicator'>{`${pickupLocation[2] + 1}`}</h4>
+                      <Actions className='actions'>
+                        <ActionBtn color='red' onClick={() => {
+                            setShowDeleteModal(true)
+                            setSelectedShipment(id, pickupLocation, dropoffLocation, description);
+                          }}>
+                          {/* @ts-ignore */}
+                          <ion-icon name="trash-outline"></ion-icon>
+                        </ActionBtn>
+                        <ActionBtn color='blue' onClick={() => {
+                            setShowEditModal(true);
+                            setSelectedShipment(id, pickupLocation, dropoffLocation, description);
+                          }}>
+                          {/* @ts-ignore */}
+                          <ion-icon name="create-outline"></ion-icon>
+                        </ActionBtn>
+                      </Actions>
+                    </div>
+                    <p>{`[${ pickupLocation[0] }, ${ pickupLocation[1] }]`}</p>
                   </div>
-                  <p>{`[${ pickupLocation[0] }, ${ pickupLocation[1] }]`}</p>
-                </div>
-                <div className='info dropoff bottom-spacing'>
-                  <div className='header'>
-                    <h4 className='title'>Dropoff</h4>
-                    <h4 className='indicator'>{`${dropoffLocation[2] + 1}`}</h4>
+                  <div className='info dropoff bottom-spacing'>
+                    <div className='header'>
+                      <h4 className='title'>Dropoff</h4>
+                      <h4 className='indicator'>{`${dropoffLocation[2] + 1}`}</h4>
+                    </div>
+                    <p>{`[${ dropoffLocation[0] }, ${ dropoffLocation[1] }]`}</p>
                   </div>
-                  <p>{`[${ dropoffLocation[0] }, ${ dropoffLocation[1] }]`}</p>
-                </div>
-                <div className='info description'>
-                  <h4 className='title'>Description</h4>
-                  <p>{ description }</p>
-                </div>
-              </WaypointContainer>
-            )
-          })
+                  <div className='info description'>
+                    <h4 className='title'>Description</h4>
+                    <p>{ description }</p>
+                  </div>
+                </WaypointContainer>
+              )
+            })
+          : <SidebarEmptyState />
         }
         {
           showCreateModal &&

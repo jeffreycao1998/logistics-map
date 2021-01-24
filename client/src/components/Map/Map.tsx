@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { ViewportType, ShipmentType, RouteType } from '../types';
-import { MAPBOX_ACCESS_TOKEN } from '../util/constants'; 
-import calcViewport from '../util/calcViewport';
+import { ViewportType, ShipmentType, RouteType } from '../../types';
+import { MAPBOX_ACCESS_TOKEN } from '../../util/constants'; 
+import calcViewport from '../../util/calcViewport';
 
 // Components
 import ReactMapGL, { Marker, Source, Layer, FlyToInterpolator } from 'react-map-gl';
@@ -27,7 +27,8 @@ const LegendContainer = styled.div`
 
 type LegendItemProps = {
   color: string
-}
+};
+
 const LegendItem = styled.div`
   display: flex;
   align-items: center;
@@ -49,7 +50,7 @@ const LegendItem = styled.div`
 type Props = {
   shipments: Array<ShipmentType>
   routes: Array<RouteType>
-}
+};
 
 const Map = ({ shipments, routes }: Props) => {
   const [viewport, setViewport] = useState({
@@ -66,7 +67,7 @@ const Map = ({ shipments, routes }: Props) => {
         longitude: center[0],
         latitude: center[1],
         zoom: zoom - 1
-      })
+      });
     }
   },[shipments]);
 
@@ -88,14 +89,16 @@ const Map = ({ shipments, routes }: Props) => {
       <ReactMapGL
         width="100%"
         height="100%"
+        mapStyle="mapbox://styles/mapbox/dark-v9"
+
         latitude={viewport.latitude}
         longitude={viewport.longitude}
         zoom={viewport.zoom}
         
-        mapStyle="mapbox://styles/mapbox/dark-v9"
         onViewportChange={(nextViewport: ViewportType) => setViewport(nextViewport)}
         transitionDuration={200}
         transitionInterpolator={new FlyToInterpolator()}
+
         mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN}
       >
         {

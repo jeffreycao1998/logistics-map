@@ -5,8 +5,8 @@ import { useQuery } from '@apollo/client';
 import { GET_ROUTES } from './graphql/gql';
 
 // components
-import Map from './components/Map';
-import Sidebar from './components/Sidebar';
+import Map from './components/Map/Map';
+import Sidebar from './components/Sidebar/Sidebar';
 
 const Container = styled.div`
   display: flex;
