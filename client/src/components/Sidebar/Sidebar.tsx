@@ -100,21 +100,6 @@ const ActionBtn = styled.div`
   cursor: pointer;
 
   ${({backgroundColor}: ActionBtnProps) => {
-    // if (color === 'blue') {
-    //   return `
-    //     background-color: #188bb1;
-    //   `;
-    // }
-    // if (color === 'red') {
-    //   return `
-    //     background-color: #da3a2f;
-    //   `;
-    // }
-    // if (color === 'green') {
-    //   return `
-    //     background-color: #34a037;
-    //   `;
-    // }
     switch (backgroundColor) {
       case 'blue':
         return `

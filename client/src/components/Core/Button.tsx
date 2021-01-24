@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 type Props = {
-  backgroundColor: string
+  backgroundColor: 'blue' | 'red' | 'green'
 }
 
 const Button = styled.div`
