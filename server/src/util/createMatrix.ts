@@ -4,7 +4,7 @@ import getWaypoints from '../util/getWaypoints';
 import fs from 'fs';
 import { sleep } from '../util/helpers';
 
-import cache from '../testing/cache/10shipmentCache';
+import cache from '../experiment/cache/10shipmentCache';
 // const cache = [] as Array<MatrixValue>;
 
 const initMatrix = (totalShipments: number) => {

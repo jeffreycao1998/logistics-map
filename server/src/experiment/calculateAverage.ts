@@ -1,5 +1,6 @@
 import calculateOptimalSequence from '../util/calcOptimalSequence';
 import { shipments } from '../index';
+import matrix from './matrix/testMatrix10Shipments';
 
 const calculateAverage = () => {
   const REPS = 10;
@@ -10,7 +11,7 @@ const calculateAverage = () => {
   let sumDuration = 0;
 
   for (let i = 0; i < REPS; i++) {
-    const result = calculateOptimalSequence(shipments);
+    const result = calculateOptimalSequence(shipments, matrix, 0);
     count++;
     sumCombinations += result.totalCombinations;
     sumDistance += result.distance;
