@@ -12,21 +12,19 @@ This project was built was built for an imaginary dispatcher who needs to be abl
 
 3. in the server folder, make a copy of the example.env and rename it to just ".env"
 
-4. replace the MAPBOX_ACCESS_KEY value with your own token
+4. replace the MAPBOX_ACCESS_KEY value with your own token (it should start with "pk.eyJ1...")
 
 5. in the client folder, go to /src/util/constants.ts and replace the MAPBOX_ACCESS_TOKEN value with your own token
 
-2. in the terminal, cd into the "client" folder, run ```npm install```
+2. in the terminal, cd into the "client" folder and run ```npm install```
 
-3. in a separate terminal, cd into the "server" folder, run ```npm install```
+3. in a separate terminal, cd into the "server" folder and run ```npm install```
 
 4. wait for both folder's dependencies to finish installing
 
 5. run ```npm start``` in the root directory of the "server" folder
 
 6. in a separate terminal, run ```npm start``` in the root directory of the "client" folder
-
-7. If the browser does not automatically open up, go to http://localhost:3000
 
 ## Getting a Mapbox Access Token
 
@@ -42,4 +40,29 @@ This project was built was built for an imaginary dispatcher who needs to be abl
 
 6. Press "Create token"
 
-7. Copy the token you just created
+## Usage
+
+After running npm start in both the client and server folder, navigate to localhost:3000 in your browser. Press "Create" at the top right corner of the side bar which opens up a modal. Create a shipment by entering it's pickup and dropoff coordinates and also a short description of the shipment. Press create and after a brief moment, it should automatically zoom into/out to a far enough to see the entire route at a comfortable distance. If you want to edit or delete a shipment, hover over the appropriate card in the side bar. 
+
+### Valid Coordinates
+
+#### Longitude -180 to 180
+#### Latitude -90 to 90
+
+## Tech Stack
+
+### Backend
+
+GraphQL w/ Apollo Server
+
+Typescript Node
+
+### Frontend
+
+GraphQL w/ Apollo Client
+
+MapboxGL
+
+Typescript React
+
+Styled Components
