@@ -112,7 +112,7 @@ const ActionBtn = styled.div`
     }
     if (color === 'green') {
       return `
-        background-color: #028102;
+        background-color: #34a037;
       `;
     }
   }}

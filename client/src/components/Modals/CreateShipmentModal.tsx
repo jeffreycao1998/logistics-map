@@ -95,7 +95,7 @@ const CreateShipmentModal = ({ setShowModal, setShipments, setRoutes }: Props) =
         {
           loading
           ? <Loader src={loader} alt='loading...' />
-          : <Button onClick={handleCreate}>CREATE</Button>
+          : <Button onClick={handleCreate} backgroundColor='green'>CREATE</Button>
         }
 
         <ErrorMessage>{ message }</ErrorMessage>

@@ -111,7 +111,7 @@ const EditShipmentModal = ({
         {
           loading
           ? <Loader src={loader} alt='loading...' />
-          : <Button onClick={handleUpdate}>UPDATE</Button>
+          : <Button onClick={handleUpdate} backgroundColor='blue'>UPDATE</Button>
         }
 
         <ErrorMessage>{ message }</ErrorMessage>

@@ -54,7 +54,7 @@ const DeleteShipmentModal = ({ shipmentId, setShowModal, setShipments, setRoutes
         {
           loading
           ? <Loader src={loader} alt='loading...' />
-          : <Button onClick={handleDelete}>DELETE</Button>
+          : <Button onClick={handleDelete} backgroundColor='red'>DELETE</Button>
         }
 
         <ErrorMessage>{ message }</ErrorMessage>
