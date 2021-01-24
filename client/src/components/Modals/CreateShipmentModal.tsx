@@ -37,7 +37,20 @@ const CreateShipmentModal = ({ setShowModal, setShipments, setRoutes }: Props) =
   const [createShipment] = useMutation(CREATE_SHIPMENT);
 
   const handleCreate = () => {
-    setLoading(true);
+    if (!pickupLng || Number(pickupLng) < -180 || Number(pickupLng) > 180) {
+      return setMessage('Pickup longitude must be between -180 and 180');
+    } else if (!pickupLat || Number(pickupLat) < -90 || Number(pickupLat) > 90) {
+      return setMessage('Pickup latitude must be between -90 and 90');
+    } else if (!dropoffLng || Number(pickupLng) < -180 || Number(pickupLng) > 180) {
+      return setMessage('Dropoff longitude must be between -180 and 180');
+    } else if (!dropoffLat || Number(dropoffLat) < -90 || Number(dropoffLat) > 90) {
+      return setMessage('Dropoff latitude must be between -90 and 90');
+    } else if (!description) {
+      return setMessage('Shipments must have a description');
+    } else {
+      setLoading(true);
+      setMessage('');
+    }
 
     createShipment({
       variables: {
