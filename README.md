@@ -55,15 +55,15 @@ After running npm start in both the client and server folder, navigate to localh
 #### Deleting a shipment
 ![](https://github.com/jeffreycao1998/route-mapper/blob/master/documents/create-delete.gif?raw=true)
 
-## Tech Stack
+# Tech Stack
 
-### Backend
+## Backend
 
 GraphQL w/ Apollo Server
 
 Typescript Node
 
-### Frontend
+## Frontend
 
 GraphQL w/ Apollo Client
 
@@ -73,11 +73,11 @@ Typescript React
 
 Styled Components
 
-## Problem
+# Problem
 
 Given a list of cities and the distances between each pair of cities, what is the shortest possible route that visits each city exactly once and returns to the origin city?
 
-## Solutions
+# Solutions
 
 The first solution I tried used a brute force algorithm which simply made a list of every possible combination and looped through all of them, calculating the total distance of the sequence and recording the shortest one. This solution quickly became obselete as I added more and more routes as the number of possible solutions increases at the rate n!. After allocating 8gb of ram to node, it would constantly run out of memory at 14 + locations and took well over 10 minutes.
 
