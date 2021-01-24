@@ -2,11 +2,13 @@
 
 ## Description
 
-This project was built for an imaginary dispatcher who needs to be able to map out an optimal route for a driver to deliver goods. It uses a Genetic Algorithm (GA) in an attempt to solve the traveling salesman problem.
+Route mapper is a project that helps visualize routes for a set of pickup and dropoff locations. This app is made for dispatchers who needs to determine their driver's routes for deliveries of non perishable goods. This application uses a genetic algorithm to solve the traveling salesman problem.
 
 ## Getting Started
 
-1. Clone this repo
+These instructions include instructions to run both the front end and back end
+
+1. Clone this repo by running ```git clone git@github.com:jeffreycao1998/logistics-map.git``` in your terminal
 
 2. Get a token from mapbox (more detailed instructions below)
 
