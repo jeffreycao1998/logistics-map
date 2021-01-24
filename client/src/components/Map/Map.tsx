@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { ViewportType, ShipmentType, RouteType } from '../../types';
-import { MAPBOX_ACCESS_TOKEN } from '../../util/constants'; 
+import { MAPBOX_ACCESS_TOKEN, SIDEBAR_WIDTH } from '../../util/constants'; 
 import calcViewport from '../../util/calcViewport';
 
 // Components
@@ -9,7 +9,7 @@ import ReactMapGL, { Marker, Source, Layer, FlyToInterpolator } from 'react-map-
 import StyledMarker from './WaypointMarker';
 
 const Container = styled.div`
-  width: calc(100% - 400px);
+  width: calc(100% - ${SIDEBAR_WIDTH}px);
   height: 100vh;
 `;
 
