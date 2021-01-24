@@ -26,12 +26,18 @@ const createShipment = async (_obj: {}, args: ShipmentType, _context: {}) => {
 
   const startingPoint = 0;
 
-  const matrix = await createMatrix(shipments);
-  const optimalSequence = calcOptimalSequence(shipments, matrix, startingPoint);
-  const routes = joinRoutes(matrix, optimalSequence);
-  addSequenceNumber(shipments, optimalSequence, 0);
-  
-  return { shipments, routes };
+  try {
+    const matrix = await createMatrix(shipments);
+    const optimalSequence = calcOptimalSequence(shipments, matrix, startingPoint);
+    const routes = joinRoutes(matrix, optimalSequence);
+    addSequenceNumber(shipments, optimalSequence, 0);
+
+    return { shipments, routes };
+  } catch(err) {
+    shipments.pop();
+
+    throw new Error(err.message);
+  }
 };
 
 export default createShipment;

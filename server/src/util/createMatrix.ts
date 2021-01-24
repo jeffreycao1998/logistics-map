@@ -45,7 +45,9 @@ const createMatrix = async (shipments: Array<ShipmentType>) => {
           matrix[i][j] = value;
           cache.push(value);
         })
-        .catch(err => console.log(err));
+        .catch(() => {
+          throw new Error('Could not find a route for these coordinates.')
+        });
       }
     }
   };
