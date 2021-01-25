@@ -1,12 +1,14 @@
-# Route Mapper w/ TSP
+# Route Mapper
 
 ## Description
 
-This project was built was built for an imaginary dispatcher who needs to be able to map out an optimal route for a driver to deliver goods. It uses a Genetic Algorithm (GA) in an attempt to solve the traveling salesman problem.
+Route mapper is a project that helps visualize routes for a set of pickup and dropoff locations. This app is made for dispatchers who needs to determine their driver's routes for deliveries. This application uses a genetic algorithm to address the traveling salesman problem.
 
 ## Getting Started
 
-1. Clone this repo
+These instructions include instructions to run both the front end and back end
+
+1. Clone this repo by running ```git clone git@github.com:jeffreycao1998/logistics-map.git``` in your terminal
 
 2. Get a token from mapbox (more detailed instructions below)
 
@@ -42,22 +44,24 @@ This project was built was built for an imaginary dispatcher who needs to be abl
 
 ## Usage
 
-After running npm start in both the client and server folder, navigate to localhost:3000 in your browser. Press "Create" at the top right corner of the side bar which opens up a modal. Create a shipment by entering it's pickup and dropoff coordinates and also a short description of the shipment. Press create and after a brief moment, it should automatically zoom into/out far enough to see the entire route comfortably. If you want to edit or delete a shipment, hover over the appropriate card in the side bar. 
+After running npm start in both the client and server folder, navigate to localhost:3000 in your browser. Press "Create" at the top right corner of the side bar which opens up a modal. Create a shipment by entering it's pickup and dropoff coordinates and also a short description of the shipment. After pressing create, it should automatically target the map area to be able to visualize the entirety of the route. If you want to edit or delete a shipment, you can hover over the appropriate route card to trigger the specific action. 
 
 ### Valid Coordinates
 
-#### Longitude -180 to 180
-#### Latitude -90 to 90
+#### Longitude: -180 to 180
+#### Latitude: -90 to 90
 
-## Tech Stack
+# Demo
 
-### Backend
+#### Creating a shipment
+![](https://github.com/jeffreycao1998/route-mapper/blob/master/documents/create-shipment.gif?raw=true)
 
-GraphQL w/ Apollo Server
+#### Deleting a shipment
+![](https://github.com/jeffreycao1998/route-mapper/blob/master/documents/create-delete.gif?raw=true)
 
-Typescript Node
+# Tech Stack
 
-### Frontend
+## Frontend
 
 GraphQL w/ Apollo Client
 
@@ -67,16 +71,27 @@ Typescript React
 
 Styled Components
 
-## Problem
+## Backend
+
+GraphQL w/ Apollo Server
+
+Typescript Node
+
+# Problem
 
 Given a list of cities and the distances between each pair of cities, what is the shortest possible route that visits each city exactly once and returns to the origin city?
 
-## Solutions
+# Solution
 
-The first solution I tried used a brute force algorithm which simply made a list of every possible combination and looped through all of them, calculating the total distance of the sequence and recording the shortest one. This solution quickly became obselete as I added more and more routes as the number of possible solutions increases at the rate n!. After allocating 8gb of ram to node, it would constantly run out of memory at 14 + locations and took well over 10 minutes.
+In order to address this problem I have made serveral attempts to find the optimal solution. In my first attempt I tried to use a brute force algorithm which simply made a list of every possible combination and looped through all of them, calculating the total distance of the sequence and recording the shortest one. This solution quickly became obselete as I added more and more routes as the number of possible solutions increases at the rate n!.
 
-The second solution I tried was a Genetic Algorithm. I started out by created an initial "population", which in this case was a short list of possible combinations. Next I would calculate the total distance of each combination and assign a "fitness" score to it. In this case, the lower the distance, the higher the fitness. From this I would generate the next generation of a population. The next generation is created by picking 2 random combinations from the previous population and combining them into one. The rate of which combination will be picked is weighted by a combination's fitness score so that combinations that are more fit are more likely to appear in the next generations. This means that the next generation will keep getting more and more accurate! After merging two combinations I swap 2 points in the combination at a "mutation rate". This rate lowers as I iterate through more and more generations at an exponential rate.
+In my second attempt I tried to use a Genetic Algorithm. This algorithm starts out by creating an initial "population", which in this case was a short list of possible combinations. Next I would calculate the total distance of each combination and assign a "fitness" score to it. In this case, the lower the distance, the higher the fitness. From this I would generate the next generation of a population. The next generation is created by picking 2 random combinations from the previous population and combining them into one. The rate of which combination will be picked is weighted by the combination's fitness score; so that combinations that are more fit are more likely to appear in the next generations. This means that the next generation will keep getting better and better! After merging two combinations I swap 2 points in the combination at a "mutation rate". This rate lowers as I iterate through more and more generations, at an exponential rate, and as the rate lowers, I'll get fewer and fewer random swaps.
 
-## Conclusion
+# Future Improvements
 
-This was a lot of fun but I still have a lot of fine tuning and research to do if I want a higher accuracy.
+-  add ability to change starting location
+-  algorithm accuracy/efficiency
+
+# Conclusion
+
+I had a lot fun building this project out and learned a lot about Genetic Algorithms. Although it works decently well, theres still a lot of fine tuning and academic research that needs to be done to get an optimal solution.
