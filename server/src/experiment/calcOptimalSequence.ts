@@ -1,9 +1,10 @@
 import { ShipmentType, CombinationType, MatrixValue } from '../types';
-import { initIndexArray, shuffle, swap } from './helpers';
-import getWaypoints from './getWaypoints';
+import { initIndexArray, shuffle, swap } from '../util/helpers';
+import getWaypoints from '../util/getWaypoints';
 
 let optimalDistance = 0;
 let optimalSequence = [] as Array<number>;
+let totalCombinations = 0;
 
 // checks for correct starting point and makes sure dropoff points for a 
 // specific shipment isn't visited before the corresponding pickup point
@@ -26,14 +27,14 @@ const isValidSequence = (indexes: Array<number>, startingPoint: number) => {
   return true;
 };
 
-const initPopulation = (indexes: Array<number>, populationSize: number, startingPoint: number) => {
+const initPopulation = (indexes: Array<number>, populationSize: number) => {
   const population = [];
 
   while (population.length < populationSize) {
     const order = shuffle(indexes);
     order.push(order[0]);
 
-    if(!isValidSequence(order, startingPoint)) continue;
+    // if(!isValidSequence(order, startingPoint)) continue;
 
     population.push({
       order,
@@ -42,6 +43,30 @@ const initPopulation = (indexes: Array<number>, populationSize: number, starting
     });
   }
   return population;
+};
+
+const calculateFitness = (totalDistance: number, order: Array<number>, startingPoint: number) => {
+  let incorrectValues = 0;
+
+  const set = new Set();
+  set.add(startingPoint);
+
+  if (order[0] !== startingPoint) incorrectValues += 1;
+  if (order[order.length - 1] !== startingPoint) incorrectValues += 1;
+
+  for (let i = 1; i < order.length; i++) {
+    // is a pickup location so just add it to the set
+    if (order[i] % 2 === 0) {
+      set.add(order[i]);
+
+    // is a dropoff location so check if it was picked up first
+    } else if (order[i] % 2 === 1 && !set.has(order[i] - 1)) {
+      incorrectValues += 1;
+    }
+  }
+
+  const fitness = 1 / (totalDistance + incorrectValues);
+  return fitness;
 };
 
 const getPopulationFitness = (population: Array<CombinationType>, matrix: Array<Array<MatrixValue>>) => {
@@ -65,10 +90,10 @@ const getPopulationFitness = (population: Array<CombinationType>, matrix: Array<
     }
 
     combination.distance = totalDistance;
-    combination.fitness = 1 / (totalDistance + 1);
+    combination.fitness = calculateFitness(totalDistance, combination.order, 0);
 
     // Check if we found an improved fitness score
-    if (combination.fitness > highestFitness) {
+    if (combination.fitness > highestFitness && isValidSequence(combination.order, 0)) {
       highestFitness = combination.fitness;
       optimalDistance = combination.distance;
       optimalSequence = combination.order;
@@ -134,7 +159,7 @@ const crossOver = (orderA: Array<number>, orderB: Array<number>, startingPoint: 
   }
 };
 
-const nextGeneration = (population: Array<CombinationType>, mutationRate: number, populationSize: number, startingPoint: number, crossOverRate: number) => {
+const nextGeneration = (population: Array<CombinationType>, populationSize: number, startingPoint: number, mutationRate: number, crossOverRate: number) => {
   const newPopulation = [];
 
   while (newPopulation.length < populationSize) {
@@ -143,7 +168,7 @@ const nextGeneration = (population: Array<CombinationType>, mutationRate: number
     const mergedOrder = crossOver(combinationA.order, combinationB.order, startingPoint, crossOverRate);
     mutate(mergedOrder, mutationRate);
 
-    if(!isValidSequence(mergedOrder, startingPoint)) continue;
+    // if(!isValidSequence(mergedOrder, startingPoint)) continue;
     
     newPopulation.push({
       order: [...mergedOrder],
@@ -162,20 +187,29 @@ const calculateOptimalSequence = (shipments: Array<ShipmentType>, matrix: Array<
 
   const populationSize = waypoints.length * 12;
   const maxCycles = 500;
-  let mutationRate = .03;
-  let crossOverRate = 0.3;
+  // let curCycles = 0;
+  let mutationRate = .02;
+  let crossOverRate = 0.95;
 
-  let population = initPopulation(indexesArray, populationSize, startingPoint);
+  let population = initPopulation(indexesArray, populationSize);
+
   for (let i = 0; i < maxCycles; i++) {
+    // curCycles += 1;
+    // crossOverRate = curCycles / maxCycles;
+    // mutationRate = 1 - curCycles / maxCycles
+
     const fitnessScores = getPopulationFitness(population, matrix);
-    population = nextGeneration(fitnessScores, mutationRate, populationSize, startingPoint, crossOverRate);
+    population = nextGeneration(fitnessScores, populationSize, startingPoint, mutationRate, crossOverRate);
+    totalCombinations += populationSize;
   }
 
-  console.log('Optimal Sequence: ', optimalSequence);
-  console.log('Optimal Distance: ', optimalDistance);
-  console.log('Run duration: ', (new Date).getTime() - startTime);
-
-  return optimalSequence;
+  // return optimalSequence;
+  return {
+    totalCombinations,
+    duration: (new Date).getTime() - startTime,
+    distance: optimalDistance,
+    optimalSequence
+  }
 };
 
 export default calculateOptimalSequence;
